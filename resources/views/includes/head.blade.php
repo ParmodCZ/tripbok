@@ -37,3 +37,5 @@
 <link rel="stylesheet" href="{{ asset('public/admin/css/all.css') }}">
 <link rel="stylesheet" href="{{ asset('public/admin/css/font.css') }}">
 <link rel="stylesheet" href="{{ asset('public/admin/css/bootstrap.css') }}">
+<link rel="stylesheet" href="{{ asset('public/css/datepicker.css') }}">
+<link rel="stylesheet" href="{{ asset('public/css/custom.css') }}">

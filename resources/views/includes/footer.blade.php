@@ -11,6 +11,16 @@
 
 <script src="{{ asset('public/admin/js/jquery.js')}}"></script>
 
+<script src="{{ asset('public/js/popper.min.js')}}"></script>
+
+<script src="{{ asset('public/js/bootstrap.js')}}"></script>
+
+<script src="{{ asset('public/js/bootstrap-datepicker.js')}}"></script>
+
+<script src="{{ asset('public/js/boostrap-form-validation.js')}}"></script>
+
+<script src="{{ asset('public/js/custom.js')}}"></script>
+
 <script src="{{ asset('public/admin/js/bootstrap.bundle.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/jquery.easing.min.js')}}"></script>

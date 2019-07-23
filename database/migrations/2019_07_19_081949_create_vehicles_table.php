@@ -18,6 +18,7 @@ class CreateVehiclesTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('model')->nullable();
+			$table->string('image')->nullable();
             $table->bigInteger('seats')->nullable();
             $table->bigInteger('price_pr_km')->nullable()->comment = 'price per Km In dollar($)';
             $table->bigInteger('price_pr_min')->nullable()->comment = 'price per min In dollar($)';

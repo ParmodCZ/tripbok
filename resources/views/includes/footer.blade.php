@@ -11,6 +11,15 @@
 
 <script src="{{ asset('public/admin/js/jquery.js')}}"></script>
 
+<script type="text/javascript">
+	var APP_URL = {!! json_encode(url('/')) !!};
+	$.ajaxSetup({
+	    headers: {
+	     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+	});
+</script>
+
 <script src="{{ asset('public/js/popper.min.js')}}"></script>
 
 <script src="{{ asset('public/js/bootstrap.js')}}"></script>
@@ -18,6 +27,8 @@
 <script src="{{ asset('public/js/bootstrap-datepicker.js')}}"></script>
 
 <script src="{{ asset('public/js/boostrap-form-validation.js')}}"></script>
+
+<script src="{{ asset('public/js/dataTables.min.js')}}"></script>
 
 <script src="{{ asset('public/js/custom.js')}}"></script>
 

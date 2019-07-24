@@ -34,18 +34,65 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index_ajax(Request $request){
-           $data = Vehicle::all();
+           $data = Vehicle::select('*');
            $data_count = $data->count();
-            // echo"<pre>";print_r($data_count);die;
+             //echo"<pre>";print_r($request->all());die;
+            $draw   = 1;
+            $start  = $request->input('start');
+            $length = $request->input('length');
+            $draw   = $request->input('draw');
+            $order  = $request->post("order");
+            $search_arr   = $request->post("search");
+            $search_value = $search_arr['value'];
+            $search_regex = $search_arr['regex'];
+            $columns      = $request->post("columns");
+
+            $col = 0;
+            $dir = "";
+            if(!empty($order)) {
+                foreach($order as $o) {
+                    $col   = $o['column'];
+                    $dir   = $o['dir'];
+                    $order = $columns[$col]['name'];
+                }
+            }
+         
+            if($dir != "asc" && $dir != "desc") {
+                $dir = "asc";
+            } 
+
+
+            // Overall Search 
+            if(!empty($search_value)){
+                $data = $data->where(function($q) use ($search_value){
+                    $q->orWhere('vehicle_number' ,'like', '%'.$search_value.'%')
+                        ->orWhere('model' ,'like', '%'.$search_value.'%')
+                        ->orWhere('type' ,'like', '%'.$search_value.'%')
+                        ->orWhere('seats' ,'like', '%'.$search_value.'%');
+                        
+                });
+            }
+            // Sorting by column
+            if($order != null){
+
+                $data = $data->orderBy($order, $dir);
+                          
+            }else{
+                $data = $data->orderBy('vehicle_number', 'asc');
+            }
+
+            //data limt 
+            $data = $data->offset($start)->limit($length)->get();
+
            $arr= array();
            foreach ($data as $value) {
               $s_arr = array();
-              $s_arr[] ='<img src="'.$value->image.'" style="width:100%;"/>';
-              $s_arr[] =$value->name;
+              $s_arr[] ='<div style="width:100px;"><img style="width:100%;" src="'.$value->image.'"/> </div>';
+              $s_arr[] =$value->vehicle_number;
               $s_arr[] =$value->type;
               $s_arr[] =$value->model;
               $s_arr[] =$value->seats;
-              $s_arr[] =$value->price_pr_km;
+              $s_arr[] ='<div><a href="#" class="btn btn-tbl-edit btn-xs"><i class="fa fa-pencil"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fa fa-trash-o "></i></a></div>';
               $arr[] =$s_arr;
            }
         
@@ -54,9 +101,9 @@ class VehiclesController extends Controller
             'recordsTotal' => $data_count,
             'recordsFiltered' => $data_count,
             'data' =>$arr );
-            //return $arrayName ;
-           echo json_encode($arrayName);
-           exit();
+            return $arrayName ;
+           // echo json_encode($arrayName);
+           // exit();
     }
 
     /**
@@ -86,6 +133,7 @@ class VehiclesController extends Controller
                 $var     = "error";
             }
             Session::flash($var , $message);
+            return redirect('admin/vehicles/index');
         }else{
             return view('pages.vehicles.add')->with(compact('vehicles_type'));
         }
@@ -124,6 +172,7 @@ class VehiclesController extends Controller
             }
             Session::flash($var , $message);
            return Redirect::back();
+           // return redirect('admin/vehicles/index');
         }else{
             return view('pages.vehicles.edit')->with(compact('vehicles_type','vehicle_detail'));
         }

@@ -15,7 +15,7 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('vehicle_number');
             $table->string('type');
             $table->string('model')->nullable();
 			$table->string('image')->nullable();
@@ -24,7 +24,7 @@ class CreateVehiclesTable extends Migration
             $table->bigInteger('price_pr_min')->nullable()->comment = 'price per min In dollar($)';
             $table->bigInteger('mini_fare')->nullable()->comment = 'In dollar($)';
             $table->bigInteger('commission')->nullable()->comment = 'In hour(hr)';
-            $table->dateTime('passenger_cancellation_time')->nullable()->comment = 'In hour(hr)';
+            $table->bigInteger('passenger_cancellation_time')->nullable()->comment = 'In hour(hr)';
             $table->bigInteger('passenger_cancellation_charges')->nullable()->comment = 'In dollar($)';
             $table->dateTime('insurance_renewal_date');
             $table->timestamps();

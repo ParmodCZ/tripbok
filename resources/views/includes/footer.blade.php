@@ -1,4 +1,4 @@
-<!-- Footer -->
+<!-- footer -->
 <footer class="sticky-footer bg-white">
 	<div class="container my-auto">
 	  <div class="copyright text-center my-auto">
@@ -30,15 +30,18 @@
 
 <script src="{{ asset('public/js/dataTables.min.js')}}"></script>
 
+<script src="{{ asset('public/js/dataTablesb4.js')}}"></script>
+
 <script src="{{ asset('public/js/custom.js')}}"></script>
 
+<!-- admin js -->
 <script src="{{ asset('public/admin/js/bootstrap.bundle.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/jquery.easing.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/admin.js')}}"></script>
 
-<script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
+<!-- <script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/chart-area-demo.js')}}"></script>
 

@@ -8,7 +8,7 @@
 
   </head>
 
-  <body id="page-top">\
+  <body id="page-top">
 
     <!-- session -->
     @if (Session::has('success'))

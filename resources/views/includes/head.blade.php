@@ -43,3 +43,4 @@
 <link rel="stylesheet" href="{{ asset('public/css/datepicker.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/dataTables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('public/css/dropzone.css') }}">

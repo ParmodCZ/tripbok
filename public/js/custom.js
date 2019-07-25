@@ -21,19 +21,20 @@ $(document).ready(function () {
     });
     //end only numaric
 
+    //datatables
      $('#vehilces_index').DataTable({
-       "aaSorting": [],
+       // "aaSorting": [],
         "processing": true,
         "serverSide": true,
-        "stateSave" : true,
+        // "stateSave" : true,
         "ajax": {"url":APP_URL+'/admin/vehicles/indexing',"type": "POST"},
        "columns": [
-                {'name': 'image',orderable: false, searchable: false },
-                {'name': 'vehicle_number' },
-                {'name' : 'model' },
-                {'name' : 'type' },
-                {'name' : 'seats' },
-                {"name": "actions",orderable: false, searchable: false}
+                {'data': 'media',orderable: false, searchable: false },
+                {'data': 'vehicle_number' },
+                {'data' : 'model' },
+                {'data' : 'type' },
+                {'data' : 'seats' },
+                {"data": "actions",orderable: false, searchable: false}
              ],
         "columnDefs": [
                 { orderable: false, targets: -1 }

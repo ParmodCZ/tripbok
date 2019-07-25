@@ -14,7 +14,7 @@
                 <th>Seating Capacity</th>
                 <th>hgfhf</th>
               </tr>
-          </thead>               
+          </thead>
       </table>
     </div>
 </div><!-- end row -->

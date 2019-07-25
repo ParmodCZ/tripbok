@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Vehicle;
+use App\Media;
 use Session;
 use Redirect;
 class VehiclesController extends Controller
@@ -86,24 +87,28 @@ class VehiclesController extends Controller
 
            $arr= array();
            foreach ($data as $value) {
+
               $s_arr = array();
-              $s_arr[] ='<div style="width:100px;"><img style="width:100%;" src="'.$value->image.'"/> </div>';
-              $s_arr[] =$value->vehicle_number;
-              $s_arr[] =$value->type;
-              $s_arr[] =$value->model;
-              $s_arr[] =$value->seats;
-              $s_arr[] ='<div><a href="#" class="btn btn-tbl-edit btn-xs"><i class="fa fa-pencil"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fa fa-trash-o "></i></a></div>';
+                $media =  Media::where('module', '=', 'vehicle')
+                 ->where('module_id', '=', $value->id)->first();
+                 //print_r($media);die;
+                $s_arr['media'] ='<div style="width:100px;"><img style="width:100%;" src="'.url("/")."/".$media['file_path'].'"/> </div>';
+              $s_arr['vehicle_number'] =$value->vehicle_number;
+              $s_arr['model'] =$value->model;
+              $s_arr['type'] =$value->type;
+              $s_arr['seats'] =$value->seats;
+              $s_arr['actions'] ='<div><a href="#" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
               $arr[] =$s_arr;
            }
         
-           $arrayName = array(
+           $returnData = array(
             'draw' => 1,
             'recordsTotal' => $data_count,
             'recordsFiltered' => $data_count,
             'data' =>$arr );
-            return $arrayName ;
-           // echo json_encode($arrayName);
-           // exit();
+            //return $arrayName ;
+            echo json_encode($returnData);
+            exit();
     }
 
     /**
@@ -125,6 +130,17 @@ class VehiclesController extends Controller
             // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");
 
             $vehicle = Vehicle::create($data['Vehicle']);
+            if($request->hasFile("image") && $vehicle){
+                $files = $request->file('image'); 
+                $filename = $files->getClientOriginalName();
+                $extension = $files->getClientOriginalExtension();
+                $fileNameToStore = 'vehicle'.time().'.'.$extension;
+                $file_path ='storage/app/';
+                $file_path .=  $request->image->storeAs('public/media/vehicle/'.$vehicle->id, $fileNameToStore);
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$vehicle->id );
+                $media = Media::create($mediadata);
+            }
+            
             if($vehicle){
                 $message = "New vehicle has been successfully created!";
                 $var     = "success";

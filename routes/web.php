@@ -29,7 +29,9 @@ Route::Group(['prefix'=>'admin'], function() {
 		Route::post('/edit/{id}', 'VehiclesController@edit')->name('post_edit_vehicles');
 	});
 
-
+	Route::Group(['prefix'=>'media'], function() {
+		Route::post('/add', 'MediaController@add')->name('ajax_media_index');
+	});
 
 
 

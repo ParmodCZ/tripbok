@@ -32,7 +32,11 @@
 
 <script src="{{ asset('public/js/dataTablesb4.js')}}"></script>
 
+<script src="{{ asset('public/js/dropzone.js')}}"></script>
+
 <script src="{{ asset('public/js/custom.js')}}"></script>
+
+<script src="{{ asset('public/js/custom-dropzone.js')}}"></script>
 
 <!-- admin js -->
 <script src="{{ asset('public/admin/js/bootstrap.bundle.min.js')}}"></script>

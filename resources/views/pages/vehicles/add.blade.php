@@ -1,14 +1,13 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
   <h2>Stacked form</h2>
-  {{ Form::open(array('url' => 'admin/vehicles/add', 'id'=>'VehileAddForm' ,'class'=>'needs-validation','novalidate'=>'novalidate')) }}
+  {{ Form::open(array('url' => 'admin/vehicles/add', 'id'=>'VehileAddForm' ,'class'=>'needs-validation','novalidate'=>'novalidate','enctype'=>'multipart/form-data')) }}
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          {{Form::label('vehicle_name','Vehicle Name:', array('class' => 'form-control-label'))}}
-          {{Form::text('data[Vehicle][name]', $value = null, $attributes =array('id'=>'vehicle_name', 'class'=>'form-control','required' => 'required'))}}
+          {{Form::label('vehicle_number','Vehicle Number:', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Vehicle][vehicle_number]', $value = null, $attributes =array('id'=>'vehicle_number', 'class'=>'form-control','required' => 'required'))}}
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
@@ -82,6 +81,13 @@
           {{Form::text('data[Vehicle][insurance_renewal_date]', $value = null, $attributes =array('id'=>'insurance_renewal_date', 'class'=>'form-control datepicker','required' => 'required'))}}
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+            <h4> Upload Image Here </h4>
+            {{Form::file('image')}}
+            <!-- <input type="file" name="data[Vehicle][image]" > -->
         </div>
       </div>
     </div>

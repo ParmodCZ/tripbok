@@ -85,9 +85,11 @@
       </div>
       <div class="col-md-12">
         <div class="form-group">
+          <div class="file_upload_div">
             <h4> Upload Image Here </h4>
-            {{Form::file('image')}}
-            <!-- <input type="file" name="data[Vehicle][image]" > -->
+            {{Form::file('data[Vehicle][image]',['class'=>"file_upload",'id'=>'file_upload'])}}
+            <div class="gallery"></div>
+          </div>
         </div>
       </div>
     </div>

@@ -91,13 +91,12 @@ class VehiclesController extends Controller
               $s_arr = array();
                 $media =  Media::where('module', '=', 'vehicle')
                  ->where('module_id', '=', $value->id)->first();
-                 //print_r($media);die;
                 $s_arr['media'] ='<div style="width:100px;"><img style="width:100%;" src="'.url("/")."/".$media['file_path'].'"/> </div>';
               $s_arr['vehicle_number'] =$value->vehicle_number;
               $s_arr['model'] =$value->model;
               $s_arr['type'] =$value->type;
               $s_arr['seats'] =$value->seats;
-              $s_arr['actions'] ='<div><a href="#" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
+              $s_arr['actions'] ='<div><a href="'.url('admin/vehicles/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
               $arr[] =$s_arr;
            }
         
@@ -130,13 +129,14 @@ class VehiclesController extends Controller
             // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");
 
             $vehicle = Vehicle::create($data['Vehicle']);
-            if($request->hasFile("image") && $vehicle){
-                $files = $request->file('image'); 
+            if($request->hasFile("data.Vehicle.image") && $vehicle){
+                $files = $request->file("data.Vehicle.image"); 
                 $filename = $files->getClientOriginalName();
                 $extension = $files->getClientOriginalExtension();
                 $fileNameToStore = 'vehicle'.time().'.'.$extension;
                 $file_path ='storage/app/';
-                $file_path .=  $request->image->storeAs('public/media/vehicle/'.$vehicle->id, $fileNameToStore);
+                $file_s = $request->data['Vehicle']['image'];
+                $file_path .= $file_s->storeAs('public/media/vehicle/'.$vehicle->id, $fileNameToStore);
                 $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$vehicle->id );
                 $media = Media::create($mediadata);
             }
@@ -163,21 +163,22 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function edit($id, Request $request){
-         $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SUV' => 'SEDAN','SEDAN' => 'Crossover','Crossover' => 'Coupe','Coupe' => 'Van','Van' => 'Wagon');
-
-         $vehicle_detail = Vehicle::where('id', '=', $id )->first();
-
+        $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SUV' => 'SEDAN','SEDAN' => 'Crossover','Crossover' => 'Coupe','Coupe' => 'Van','Van' => 'Wagon');
+        $vehicle_detail = Vehicle::where('id', '=', $id )->first();
+        $vehicle_detail['image'] = '';        
+        $media =  Media::where('module', '=', 'vehicle')->where('module_id', '=', $id)->first();   
+        if($media){
+            $vehicle_detail['image'] =url("/")."/".$media['file_path'];
+        }    
+        //echo"<pre>";print_r($vehicle_detail);die;
         if ($request->isMethod('post')) {
 
             $data = $request->input('data');
             $string_date = strtotime($data['Vehicle']['insurance_renewal_date']);
             $data['Vehicle']['insurance_renewal_date'] = date("Y-m-d",$string_date);
-
             // $date=date_create_from_format("m/d/Y",$data['Vehicle']['insurance_renewal_date']);
-            // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");
-            
+            // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");           
             $vehicle = Vehicle::find($id);
-            //echo"<pre>";print_r($data);die;
             $vehicle->update($data['Vehicle']);
             if($vehicle){
                 $message = "vehicle has been successfully update!";

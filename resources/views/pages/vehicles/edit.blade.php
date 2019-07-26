@@ -7,8 +7,8 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          {{Form::label('vehicle_name','Vehicle Name:', array('class' => 'form-control-label'))}}
-          {{Form::text('data[Vehicle][name]', $vehicle_detail->name, $attributes =array('id'=>'vehicle_name', 'class'=>'form-control','required' => 'required'))}}
+          {{Form::label('vehicle_number','Vehicle Number:', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Vehicle][vehicle_number]', $vehicle_detail->vehicle_number, $attributes =array('id'=>'vehicle_number', 'class'=>'form-control','required' => 'required'))}}
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
@@ -83,6 +83,15 @@
           {{Form::text('data[Vehicle][insurance_renewal_date]', date('m/d/Y', $string_date), $attributes =array('id'=>'insurance_renewal_date', 'class'=>'form-control datepicker','required' => 'required'))}}
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <div class="file_upload_div">
+            <h4> Upload Image Here </h4>
+            {{Form::file('data[Vehicle][image]',['class'=>"file_upload",'id'=>'file_upload'])}}
+            <div class="gallery"></div>
+          </div>
         </div>
       </div>
     </div>

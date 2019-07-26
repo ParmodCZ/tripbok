@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','address','city','country','zip','phone','gander'
     ];
 
     /**
@@ -37,4 +37,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+    * relation betwwen users and trips
+    * type: one to many (inverse)
+    **/
+    public function trips(){
+        return $this->hasMany('App\Trip');
+    }
 }

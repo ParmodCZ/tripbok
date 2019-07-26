@@ -1,3 +1,35 @@
+// $(function () {
+//     $(":file").change(function () {
+//         if (this.files && this.files[0]) {
+//             var reader = new FileReader();
+//             reader.onload = imageIsLoaded;
+//             reader.readAsDataURL(this.files[0]);
+//         }
+//     });
+// });
+// function imageIsLoaded(e) {
+// 	$('#myImg').attr('src', e.target.result);
+// };
+
+$(function() {
+  // Multiple images preview in browser
+  var imagesPreview = function(input, placeToInsertImagePreview) {
+    if (input.files) {
+      var filesAmount = input.files.length;
+      for (i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+        }
+        reader.readAsDataURL(input.files[i]);
+      }
+    }
+  };
+  $('#file_upload').on('change', function() {
+      imagesPreview(this, 'div.gallery');
+  });
+});
+
 $(document).ready(function () {
     // date picker
     $('.datepicker').datepicker({
@@ -21,24 +53,65 @@ $(document).ready(function () {
     });
     //end only numaric
 
-    //datatables
-     $('#vehilces_index').DataTable({
+    //datatables 
+
+    //vehicle
+    $('#vehilces_index').DataTable({
        // "aaSorting": [],
-        "processing": true,
-        "serverSide": true,
-        // "stateSave" : true,
-        "ajax": {"url":APP_URL+'/admin/vehicles/indexing',"type": "POST"},
-       "columns": [
-                {'data': 'media',orderable: false, searchable: false },
-                {'data': 'vehicle_number' },
-                {'data' : 'model' },
-                {'data' : 'type' },
-                {'data' : 'seats' },
-                {"data": "actions",orderable: false, searchable: false}
-             ],
-        "columnDefs": [
-                { orderable: false, targets: -1 }
-            ]
+      "processing": true,
+      "serverSide": true,
+      // "stateSave" : true,
+      "ajax": {"url":APP_URL+'/admin/vehicles/indexing',"type": "POST"},
+      "columns": [
+              {'data': 'media',orderable: false, searchable: false },
+              {'data': 'vehicle_number' },
+              {'data' : 'model' },
+              {'data' : 'type' },
+              {'data' : 'seats' },
+              {"data": "actions",orderable: false, searchable: false}
+            ],
+      "columnDefs": [
+              { orderable: false, targets: -1 }
+          ]
     });
+
+    //driver
+    $('#drivers_index').DataTable({
+      // "aaSorting": [],
+     "processing": true,
+     "serverSide": true,
+     // "stateSave" : true,
+     "ajax": {"url":APP_URL+'/admin/drivers/indexing',"type": "POST"},
+     "columns": [
+             {'data': 'media',orderable: false, searchable: false },
+             {'data': 'name' },
+             {'data' : 'email' },
+             {'data' : 'phone' },
+             {'data' : 'address' },
+             {"data": "actions",orderable: false, searchable: false}
+           ],
+     "columnDefs": [
+             { orderable: false, targets: -1 }
+         ]
+   });
+  //trip
+  $('#trips_index').DataTable({
+    // "aaSorting": [],
+  "processing": true,
+  "serverSide": true,
+  // "stateSave" : true,
+  "ajax": {"url":APP_URL+'/admin/trips/indexing',"type": "POST"},
+  "columns": [
+          {'data': 'media',orderable: false, searchable: false },
+          {'data': 'name' },
+          {'data' : 'email' },
+          {'data' : 'phone' },
+          {'data' : 'address' },
+          {"data": "actions",orderable: false, searchable: false}
+        ],
+  "columnDefs": [
+          { orderable: false, targets: -1 }
+      ]
+  });
 
 });

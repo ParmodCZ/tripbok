@@ -83,8 +83,8 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Drivers Detail:</h6>
-            <a class="collapse-item" href="#">Add New Driver</a>
-            <a class="collapse-item" href="#">All Drivers</a>
+            <a class="collapse-item" href="{{ url('admin/drivers/add') }}">Add New Driver</a>
+            <a class="collapse-item" href="{{ url('admin/drivers/index') }}">All Drivers</a>
             <a class="collapse-item" href="#">Driver Payment</a>
             <!-- <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
@@ -130,7 +130,7 @@
             <h6 class="collapse-header">Vehicles Detail:</h6>
             <a class="collapse-item" href="{{ url('admin/vehicles/index') }}">View All Vehicle</a>
             <a class="collapse-item" href="{{ url('admin/vehicles/add') }}">Add Vehicle Details</a>
-            <a class="collapse-item" href="#">Edit Vehicle Details</a>
+            <!-- <a class="collapse-item" href="#">Edit Vehicle Details</a> -->
             <!-- <a class="collapse-item" href="#">Add Vehicle Details</a> -->
           </div>
         </div>

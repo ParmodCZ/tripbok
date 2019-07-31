@@ -34,7 +34,13 @@
 
 <script src="{{ asset('public/js/dropzone.js')}}"></script>
 
+<script src="{{ asset('public/js/tinymce.min.js')}}"></script>
+
+<script src="{{ asset('public/js/full-feature-tinymce.js')}}"></script>
+
 <script src="{{ asset('public/js/custom.js')}}"></script>
+
+<script src="{{ asset('public/js/sweet-alert.min.js')}}"></script>
 
 <script src="{{ asset('public/js/custom-dropzone.js')}}"></script>
 

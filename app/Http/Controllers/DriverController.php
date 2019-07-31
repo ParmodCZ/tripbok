@@ -88,16 +88,21 @@ class DriverController extends Controller
             	$s_arr = array();
                 $media =  Media::where('module', '=', 'driver')
                  ->where('module_id', '=', $value->id)->first();
-                $s_arr['media']   =  '<div style="width:100px;"><img style="width:100%;" src="'.url("/")."/".$media['file_path'].'"/> </div>';
+                 if($media){
+                    $s_arr['media'] = '<div style="width:100px;"><img style="width:100%;" src="'.url("/")."/".$media['file_path'].'"/> </div>';
+                 }else{
+                    $s_arr['media'] = '<div style="width:100px;"><img style="width:100%;" src="'.url("/")."/storage/app/public/media/user.jpg".'"/> </div>';
+                 }
+
                 $s_arr['name']    =  $value->name;
                 $s_arr['email']   =  $value->email;
                 $s_arr['phone']   =  $value->phone;
                 $s_arr['address'] =  $value->address;
-                $s_arr['actions'] ='<div><a href="'.url('admin/drivers/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
+                $s_arr['actions'] ='<div><a href="'.url('admin/drivers/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a href="javascript:void(0)" onclick="deleteDriver('.$value->id.', this)" class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
                 $arr[] =$s_arr;
             }
             $returnData = array(
-            'draw' => 1,
+            'draw' => $draw,
             'recordsTotal' => $data_count,
             'recordsFiltered' => $data_count,
             'data' =>$arr );
@@ -200,5 +205,24 @@ class DriverController extends Controller
         }
          
     }    
+
+    // Delete Drivers
+    public function delete(Request $request){
+        if ($request->isMethod('post')) {
+            $post_data =  $request->all();
+            if(!empty($post_data)){
+                $id = $post_data['id'];
+                $user = User::find($id);
+                $delete = $user->delete();
+                if($delete){
+                    return array('status' => 'success');
+                }else{
+                    return array('status' => 'error');
+                }
+            }else{
+                return array('status' => 'error');
+            }
+        }
+    } 
 
 }

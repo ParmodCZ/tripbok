@@ -93,7 +93,7 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary" data-form-id="ShowAdminAddForm">Submit</button>
+    <button type="submit" class="btn btn-primary" data-form-id="VehileAddForm">Submit</button>
  {{ Form::close() }}
 </div>
 @endsection

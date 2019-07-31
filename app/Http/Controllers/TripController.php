@@ -35,8 +35,8 @@ class TripController extends Controller
 
     		$tripis ='booked';
     		// $tripis   = $request->post("tripis");
-            $data = Trip::select('*')->where('status', '=', $tripis)->with('drivers')->with('passengers');
-            echo"<pre>";print_r($data->get());die;
+    		//->where('status', '=', $tripis)
+            $data = Trip::select('*')->with('drivers','passengers');
             $data_count = $data->count();
             $draw   = 1;
             $start  = $request->input('start');
@@ -49,6 +49,9 @@ class TripController extends Controller
             $columns      = $request->post("columns");
             $col = 0;
             $dir = "";
+            // echo"<pre>";print_r($order);
+            //  echo"<pre>";print_r($columns);
+            // die;
             if(!empty($order)) {
                 foreach($order as $o) {
                     $col   = $o['column'];
@@ -60,10 +63,7 @@ class TripController extends Controller
             if($dir != "asc" && $dir != "desc") {
                 $dir = "asc";
             } 
-
-
             // Overall Search 
-
             if(!empty($search_value)){
                 $data = $data->where(function($q) use ($search_value){
                     $q->orWhere('name' ,'like', '%'.$search_value.'%')
@@ -73,12 +73,14 @@ class TripController extends Controller
                         
                 });
             }
-
-            // Sorting by column
             if($order != null){
-
-                $data = $data->orderBy($order, $dir);
-                          
+	        	if($order=='driver_name'){
+	        		$data = $data->orderBy('drivers.name', $dir);
+	        	}else if($order=='passenger_name'){
+	        		$data = $data->orderBy('passengers.name', $dir);
+	        	}else{
+	        		$data = $data->orderBy($order, $dir);
+	        	}                          
             }else{
                 $data = $data->orderBy('id', 'asc');
             }
@@ -89,17 +91,16 @@ class TripController extends Controller
            $arr= array();
             foreach ($data as $value) {
             	$s_arr = array();
-echo"<pre>";print_r($value->drivers);die;
                 $s_arr['trip_id'] =  $value->id;
                 $s_arr['driver_name']   =  $value->drivers->name;
                 $s_arr['passenger_name']   =  $value->passengers->name;
                 $s_arr['form'] =  $value->from;
                 $s_arr['to'] =  $value->to;
-                $s_arr['actions'] ='<div><a href="'.url('admin/drivers/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
+                $s_arr['actions'] ='<div><a href="'.url('admin/drivers/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a href="javascript:void(0)" onclick="deleteTrip('.$value->id.', this)" class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
                 $arr[] =$s_arr;
             }
             $returnData = array(
-            'draw' => 1,
+            'draw' => $draw,
             'recordsTotal' => $data_count,
             'recordsFiltered' => $data_count,
             'data' =>$arr );
@@ -112,42 +113,42 @@ echo"<pre>";print_r($value->drivers);die;
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function add(Request $request){
+    // public function add(Request $request){
 
-    	$gender = array('male'=>'male','female' => 'female','other' => 'other');
+    // 	$gender = array('male'=>'male','female' => 'female','other' => 'other');
 
-        if ($request->isMethod('post')) {
+    //     if ($request->isMethod('post')) {
 
-            $data = $request->input('data');
-            //role
-            $data['Driver']['role'] =2;
-            $driver = User::create($data['Driver']);
-            if($request->hasFile("data.Driver.image") && $driver){
-                $files = $request->file("data.Driver.image"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['image'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
-                $media = Media::create($mediadata);
-            }
+    //         $data = $request->input('data');
+    //         //role
+    //         $data['Driver']['role'] =2;
+    //         $driver = User::create($data['Driver']);
+    //         if($request->hasFile("data.Driver.image") && $driver){
+    //             $files = $request->file("data.Driver.image"); 
+    //             $filename = $files->getClientOriginalName();
+    //             $extension = $files->getClientOriginalExtension();
+    //             $fileNameToStore = 'driver'.time().'.'.$extension;
+    //             $file_path ='storage/app/';
+    //             $file_s = $request->data['Driver']['image'];
+    //             $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+    //             $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
+    //             $media = Media::create($mediadata);
+    //         }
             
-            if($driver){
-                $message = "New driver has been successfully created!";
-                $var     = "success";
-            }else{
-                $message = "There is some problem while creating the show. Please try again.";
-                $var     = "error";
-            }
-            Session::flash($var , $message);
-            return redirect('admin/drivers/index');
-        }else{
-            return view('pages.drivers.add')->with(compact('gender'));
-        }
+    //         if($driver){
+    //             $message = "New driver has been successfully created!";
+    //             $var     = "success";
+    //         }else{
+    //             $message = "There is some problem while creating the show. Please try again.";
+    //             $var     = "error";
+    //         }
+    //         Session::flash($var , $message);
+    //         return redirect('admin/drivers/index');
+    //     }else{
+    //         return view('pages.drivers.add')->with(compact('gender'));
+    //     }
          
-    }
+    // }
 
 
     /**
@@ -155,51 +156,70 @@ echo"<pre>";print_r($value->drivers);die;
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function edit($id, Request $request){
+    // public function edit($id, Request $request){
 
-        $gender = array('male'=>'male','female' => 'female','other' => 'other');
+    //     $gender = array('male'=>'male','female' => 'female','other' => 'other');
 
-        $driver_detail = User::where('id', '=', $id )->where('role','=',2)->first();
-        $driver_detail['image'] = '';        
-        $media =  Media::where('module', '=', 'driver')->where('module_id', '=', $id)->first();   
-        if($media){
-            $driver_detail['image'] =url("/")."/".$media['file_path'];
-        }    
-        //echo"<pre>";print_r($vehicle_detail);die;
-        if ($request->isMethod('post')) {
-            $data = $request->input('data');          
-            $driver = User::where('id', '=', $id )->where('role','=',2)->first();
-            if($request->hasFile("data.Driver.image")){
-                $files = $request->file("data.Driver.image"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['image'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+    //     $driver_detail = User::where('id', '=', $id )->where('role','=',2)->first();
+    //     $driver_detail['image'] = '';        
+    //     $media =  Media::where('module', '=', 'driver')->where('module_id', '=', $id)->first();   
+    //     if($media){
+    //         $driver_detail['image'] =url("/")."/".$media['file_path'];
+    //     }    
+    //     //echo"<pre>";print_r($vehicle_detail);die;
+    //     if ($request->isMethod('post')) {
+    //         $data = $request->input('data');          
+    //         $driver = User::where('id', '=', $id )->where('role','=',2)->first();
+    //         if($request->hasFile("data.Driver.image")){
+    //             $files = $request->file("data.Driver.image"); 
+    //             $filename = $files->getClientOriginalName();
+    //             $extension = $files->getClientOriginalExtension();
+    //             $fileNameToStore = 'driver'.time().'.'.$extension;
+    //             $file_path ='storage/app/';
+    //             $file_s = $request->data['Driver']['image'];
+    //             $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
 
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
-                $media_exist = Media::where('module','=','driver')->where('module_id','=',$driver->id)->first();
-                if($media_exist){
-                    $media_exist->update($mediadata);
-                }else{
-                   $media = Media::create($mediadata); 
-                }
-            }
-            $driver->update($data['Driver']);
-            if($driver){
-                $message = "driver has been successfully update!";
-                $var     = "success";
-            }else{
-                $message = "There is some problem while creating the show. Please try again.";
-                $var     = "error";
-            }
-            Session::flash($var , $message);
-           return Redirect::back();
-           // return redirect('admin/vehicles/index');
-        }else{
-            return view('pages.drivers.edit')->with(compact('gender','driver_detail'));
-        }
+    //             $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
+    //             $media_exist = Media::where('module','=','driver')->where('module_id','=',$driver->id)->first();
+    //             if($media_exist){
+    //                 $media_exist->update($mediadata);
+    //             }else{
+    //                $media = Media::create($mediadata); 
+    //             }
+    //         }
+    //         $driver->update($data['Driver']);
+    //         if($driver){
+    //             $message = "driver has been successfully update!";
+    //             $var     = "success";
+    //         }else{
+    //             $message = "There is some problem while creating the show. Please try again.";
+    //             $var     = "error";
+    //         }
+    //         Session::flash($var , $message);
+    //        return Redirect::back();
+    //        // return redirect('admin/vehicles/index');
+    //     }else{
+    //         return view('pages.drivers.edit')->with(compact('gender','driver_detail'));
+    //     }
          
-    }  
+    // }  
+
+    // Delete Trips
+    public function delete(Request $request){
+        if ($request->isMethod('post')) {
+            $post_data =  $request->all();
+            if(!empty($post_data)){
+                $id = $post_data['id'];
+                $trip = Trip::find($id);
+                $delete = $trip->delete();
+                if($delete){
+                    return array('status' => 'success');
+                }else{
+                    return array('status' => 'error');
+                }
+            }else{
+                return array('status' => 'error');
+            }
+        }
+    } 
 }

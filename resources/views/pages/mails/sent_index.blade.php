@@ -4,14 +4,14 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <table id="drivers_index" class="table table-striped table-bordered" style="width:100%">
+      <table id="sent_index" class="table table-striped table-bordered" style="width:100%">
           <thead>
               <tr>
-                <th></th>
-                <th>name</th>
-                <th>email</th>
-                <th>phone</th>
-                <th>address</th>
+                <th>To</th>
+                <th>Cc</th>
+                <th>Bcc</th>
+                <th>Subject</th>
+                <th>Message</th>
                 <th>Action</th>
               </tr>
           </thead>

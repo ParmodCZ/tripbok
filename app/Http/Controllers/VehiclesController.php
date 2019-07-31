@@ -15,10 +15,10 @@ class VehiclesController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /**
      * Vehicles index .
@@ -96,12 +96,12 @@ class VehiclesController extends Controller
               $s_arr['model'] =$value->model;
               $s_arr['type'] =$value->type;
               $s_arr['seats'] =$value->seats;
-              $s_arr['actions'] ='<div><a href="'.url('admin/vehicles/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
+              $s_arr['actions'] ='<div><a href="'.url('admin/vehicles/edit').'/'.$value->id.'" class="btn btn-tbl-edit btn-xs"><i class="fas fa-pencil-alt"></i></a><a href="javascript:void(0)" onclick="deleteVehicle('.$value->id.', this)" class="btn btn-tbl-delete btn-xs"><i class="fas fa-trash-alt"></i></a></div>';
               $arr[] =$s_arr;
            }
         
            $returnData = array(
-            'draw' => 1,
+            'draw' =>$draw,
             'recordsTotal' => $data_count,
             'recordsFiltered' => $data_count,
             'data' =>$arr );
@@ -116,7 +116,7 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function add(Request $request){
-         $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SUV' => 'SEDAN','SEDAN' => 'Crossover','Crossover' => 'Coupe','Coupe' => 'Van','Van' => 'Wagon');
+         $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SEDAN' => 'SEDAN','Crossover' => 'Crossover','Coupe' => 'Coupe','Van' => 'Van','Wagon' => 'Wagon');
 
         if ($request->isMethod('post')) {
 
@@ -145,7 +145,7 @@ class VehiclesController extends Controller
                 $message = "New vehicle has been successfully created!";
                 $var     = "success";
             }else{
-                $message = "There is some problem while creating the show. Please try again.";
+                $message = "There is some problem while creating the vehicle. Please try again.";
                 $var     = "error";
             }
             Session::flash($var , $message);
@@ -163,7 +163,7 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function edit($id, Request $request){
-        $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SUV' => 'SEDAN','SEDAN' => 'Crossover','Crossover' => 'Coupe','Coupe' => 'Van','Van' => 'Wagon');
+        $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SEDAN' => 'SEDAN','Crossover' => 'Crossover','Coupe' => 'Coupe','Van' => 'Van','Wagon' => 'Wagon');
         $vehicle_detail = Vehicle::where('id', '=', $id )->first();
         $vehicle_detail['image'] = '';        
         $media =  Media::where('module', '=', 'vehicle')->where('module_id', '=', $id)->first();   
@@ -194,6 +194,24 @@ class VehiclesController extends Controller
             return view('pages.vehicles.edit')->with(compact('vehicles_type','vehicle_detail'));
         }
          
-    }    
+    }  
+    // Delete Vehicles
+    public function delete(Request $request){
+        if ($request->isMethod('post')) {
+            $post_data =  $request->all();
+            if(!empty($post_data)){
+                $id = $post_data['id'];
+                $vehicle = Vehicle::find($id);
+                $delete = $vehicle->delete();
+                if($delete){
+                    return array('status' => 'success');
+                }else{
+                    return array('status' => 'error');
+                }
+            }else{
+                return array('status' => 'error');
+            }
+        }
+    }  
 
 }

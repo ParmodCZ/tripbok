@@ -7,12 +7,12 @@
       <table id="trips_index" class="table table-striped table-bordered" style="width:100%">
           <thead>
               <tr>
-                <th></th>
-                <th>name</th>
-                <th>email</th>
-                <th>phone</th>
-                <th>address</th>
-                <th>hgfhf</th>
+                <th>Trip ID</th>
+                <th>Driver Name</th>
+                <th>Passenger Name</th>
+                <th>Form</th>
+                <th>To</th>
+                <th>Action</th>
               </tr>
           </thead>
       </table>

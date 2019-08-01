@@ -73,6 +73,26 @@ Route::Group(['prefix'=>'admin'], function() {
 		Route::post('/edit/{id}', 'FaresController@edit')->name('post_edit_vehicles');
 		Route::post('/delete', 'FaresController@delete')->name('post_delete_fares');
 	});
+	//coupons
+	Route::Group(['prefix'=>'coupons'], function() {
+		Route::get('/index', 'CouponController@index')->name('get_coupons_index');
+		Route::post('/indexing', 'CouponController@index_ajax')->name('ajax_coupons_index');
+		Route::get('/add', 'CouponController@add')->name('get_add_coupons');
+		Route::post('/add', 'CouponController@add')->name('post_add_coupons');
+		Route::get('/edit/{id}', 'CouponController@edit')->name('get_edit_coupons');
+		Route::post('/edit/{id}', 'CouponController@edit')->name('post_edit_coupons');
+		Route::post('/delete', 'CouponController@delete')->name('post_delete_coupons');
+	});
+	//passengers
+	Route::Group(['prefix'=>'passengers'], function() {
+		Route::get('/index', 'PassengerController@index')->name('get_passengers_index');
+		Route::post('/indexing', 'PassengerController@index_ajax')->name('ajax_passengers_index');
+		Route::get('/add', 'PassengerController@add')->name('get_add_passengers');
+		Route::post('/add', 'PassengerController@add')->name('post_add_passengers');
+		Route::get('/edit/{id}', 'PassengerController@edit')->name('get_edit_passengers');
+		Route::post('/edit/{id}', 'PassengerController@edit')->name('post_edit_passengers');
+		Route::post('/delete', 'PassengerController@delete')->name('post_delete_passengers');
+	});
 
 
 });

@@ -15,14 +15,15 @@ class CreateTripsTable extends Migration
     {
         Schema::create('trips', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('status')->default('booked')->comment = 'active,completed,booked';
+            $table->string('status')->default('booked')->comment = 'active,completed,booked,cancelled';
             $table->boolean('is_confirmed')->default(0);
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('passenger_id')->nullable();
-            $table->string('form');
+            $table->string('from');
             $table->string('to');
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
+            $table->bigInteger('fare')->nullable()->comment = 'In Doller ($)';
             $table->timestamps();
         });
     }

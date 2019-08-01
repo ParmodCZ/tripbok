@@ -56,7 +56,7 @@ function DeleteModuleAjax(data=null,url='',that=null,module='',tabledata=null){
           if(response.status == 'success'){
             swal({
               title: 'Deleted!', 
-              text: 'The'+module+'has been deleted successfully.',
+              text: 'The '+module+' has been deleted successfully.',
               type: 'success'
             });
             tabledata.row( $(that).parents('tr') ).remove().draw();
@@ -141,6 +141,25 @@ $(document).ready(function () {
              { orderable: false, targets: -1 }
          ]
    });
+   //passenger
+   PassengerTable = $('#passengers_index').DataTable({
+    "aaSorting": [],
+    "processing": true,
+    "serverSide": true,
+    "stateSave" : true,
+    "ajax": {"url":APP_URL+'/admin/passengers/indexing',"type": "POST"},
+    "columns": [
+            {'data': 'media',orderable: false, searchable: false },
+            {'data': 'name','name':'name' },
+            {'data' : 'email','name':'email' },
+            {'data' : 'phone','name':'phone' },
+            {'data' : 'address','name':'address' },
+            {"data": "actions",orderable: false, searchable: false}
+          ],
+    "columnDefs": [
+            { orderable: false, targets: -1 }
+        ]
+  });
   //trip
   TripTable = $('#trips_index').DataTable({
     "aaSorting": [],
@@ -199,6 +218,23 @@ $(document).ready(function () {
           { orderable: false, targets: -1 }
       ]
   });
+  //coupons
+  CouponTable = $('#coupons_index').DataTable({
+    "aaSorting": [],
+  "processing": true,
+  "serverSide": true,
+  "stateSave" : true,
+  "ajax": {"url":APP_URL+'/admin/coupons/indexing',"type": "POST"},
+  "columns": [
+          {'data': 'coupon_code','name':'coupon_code'},
+          {'data': 'discount','name':'discount' },
+          {'data' : 'expired','name':'expired' },
+          {"data": "actions",orderable: false, searchable: false}
+        ],
+  "columnDefs": [
+          { orderable: false, targets: -1 }
+      ]
+  });
 
 });
 
@@ -228,6 +264,15 @@ function deleteDriver(id,that){
     var moduleUrl ='/admin/drivers/delete';
     var moduleName ='Driver';
     DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,DriverTable);
+  }
+}
+function deletePassenger(id,that){
+  if(id != '' || id != 0){
+    var this_obj = that;          
+    var data = {'id':id};
+    var moduleUrl ='/admin/passengers/delete';
+    var moduleName ='Passenger';
+    DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,PassengerTable);
   }
 }
 function deleteFare(id,that){

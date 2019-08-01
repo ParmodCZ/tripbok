@@ -15,10 +15,10 @@ class VehiclesController extends Controller
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * Vehicles index .
@@ -158,7 +158,7 @@ class VehiclesController extends Controller
 
 
     /**
-     * Add vehicles .
+     * Edit vehicles .
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */

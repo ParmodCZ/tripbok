@@ -15,7 +15,7 @@
       <div class="col-md-6">
         <div class="form-group">
           {{Form::label('gender','Gender:', array('class' => 'form-control-label'))}}
-          {{Form::select('data[Vehicle][type]',$gender,$driver_detail->gender, $attributes=array('id'=>'gender','class'=>'form-control'))}}    
+          {{Form::select('data[Driver][gender]',$gender,$driver_detail->gender, $attributes=array('id'=>'gender','class'=>'form-control'))}}    
         </div>
       </div>
       <div class="col-md-6">

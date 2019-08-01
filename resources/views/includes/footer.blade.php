@@ -51,7 +51,7 @@
 
 <script src="{{ asset('public/admin/js/admin.js')}}"></script>
 
-<!-- <script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
+<script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/chart-area-demo.js')}}"></script>
 

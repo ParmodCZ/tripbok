@@ -137,8 +137,8 @@
       <div id="collapseCoupons" class="collapse" aria-labelledby="headingCoupons" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Coupons Detail:</h6>
-            <a class="collapse-item" href="#">Coupon Generation</a>
-            <a class="collapse-item" href="#">Coupon List</a>
+            <a class="collapse-item" href="{{ url('admin/coupons/add') }}">Coupon Generation</a>
+            <a class="collapse-item" href="{{ url('admin/coupons/index') }}">Coupon List</a>
             <!-- <a class="collapse-item" href="#">Edit Vehicle Details</a> -->
             <!-- <a class="collapse-item" href="#">Add Vehicle Details</a> -->
          </div>

@@ -182,7 +182,7 @@ class DriverController extends Controller
                     ->where('users.id', '=', $id)->where('users.role', '=', 2);
                     //->leftJoin('media', 'media.module_id', '=', 'drivers.id');
         }
-       // echo"<pre>";print_r($user->first());die;
+        //echo"<pre>";print_r($user->first());die;
         return $user->first();
     }
     /**

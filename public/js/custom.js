@@ -112,7 +112,7 @@ $("#myState").change(function(){
   $.getJSON(APP_URL+'/public/countries/cities.json',function(data){
     console.log(data);
     var returnedData = $.grep(data.states, function (element, index) {
-      return element.country_id == thatval;
+      return element.state_id == thatval;
     });
     var myCity = '';
     $.each(returnedData, function(key,val){

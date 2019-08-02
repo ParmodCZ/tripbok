@@ -77,6 +77,52 @@ function DeleteModuleAjax(data=null,url='',that=null,module='',tabledata=null){
 }
 
 $(document).ready(function () {
+  //select country
+  $('#selectcountry').flagStrap({
+    placeholder: {
+        value: "",
+        text: "Country of origin"
+    }
+});
+
+$.getJSON(APP_URL+'/public/countries/countries.json',function(data){
+  var myCountry = '';
+  $.each(data.countries, function(key,val){
+    myCountry +='<option value="'+val.id+'">'+val.name+'</option>';
+  });
+  $('#myCountry').html(myCountry);
+});
+
+$("#myCountry").change(function(){
+  var thatval =  this.value;
+  $.getJSON(APP_URL+'/public/countries/states.json',function(data){
+    var returnedData = $.grep(data.states, function (element, index) {
+      return element.country_id == thatval;
+    });
+    var myState = '';
+    $.each(returnedData, function(key,val){
+      myState +='<option value="'+val.id+'">'+val.name+'</option>';
+    });
+    $('#myState').html(myState);
+  });
+});
+
+$("#myState").change(function(){
+  var thatval =  this.value;
+  $.getJSON(APP_URL+'/public/countries/cities.json',function(data){
+    console.log(data);
+    var returnedData = $.grep(data.states, function (element, index) {
+      return element.country_id == thatval;
+    });
+    var myCity = '';
+    $.each(returnedData, function(key,val){
+      myCity +='<option value="'+val.id+'">'+val.name+'</option>';
+    });
+    $('#myCity').html(myCity);
+  });
+});
+
+
 
   tinyTextEditor('full-featured','class');
     // date picker

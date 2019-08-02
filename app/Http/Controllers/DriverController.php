@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Media;
+use App\Driver;
 use Session;
 use Redirect;
 class DriverController extends Controller
@@ -117,24 +118,45 @@ class DriverController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function add(Request $request){
-
     	$gender = array('male'=>'male','female' => 'female','other' => 'other');
-
         if ($request->isMethod('post')) {
-
             $data = $request->input('data');
             //role
-            $data['Driver']['role'] =2;
-            $driver = User::create($data['Driver']);
-            if($request->hasFile("data.Driver.image") && $driver){
-                $files = $request->file("data.Driver.image"); 
+            $data['User']['role'] =2;
+            $user = User::create($data['User']);
+            $data['Driver']['user_id'] =$user->id;            
+            $driver = Driver::create($data['Driver']);
+            if($request->hasFile("data.User.image") && $driver){
+                $files = $request->file("data.User.image"); 
                 $filename = $files->getClientOriginalName();
                 $extension = $files->getClientOriginalExtension();
                 $fileNameToStore = 'driver'.time().'.'.$extension;
                 $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['image'];
+                $file_s = $request->data['User']['image'];
                 $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'profile');
+                $media = Media::create($mediadata);
+            }
+            if($request->hasFile("data.Driver.license") && $driver){
+                $files = $request->file("data.Driver.license"); 
+                $filename = $files->getClientOriginalName();
+                $extension = $files->getClientOriginalExtension();
+                $fileNameToStore = 'driver'.time().'.'.$extension;
+                $file_path ='storage/app/';
+                $file_s = $request->data['Driver']['license'];
+                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'license');
+                $media = Media::create($mediadata);
+            }
+            if($request->hasFile("data.Driver.insurance") && $driver){
+                $files = $request->file("data.Driver.insurance"); 
+                $filename = $files->getClientOriginalName();
+                $extension = $files->getClientOriginalExtension();
+                $fileNameToStore = 'driver'.time().'.'.$extension;
+                $file_path ='storage/app/';
+                $file_s = $request->data['Driver']['insurance'];
+                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'insurance');
                 $media = Media::create($mediadata);
             }
             
@@ -153,23 +175,24 @@ class DriverController extends Controller
          
     }
 
-
+    private function getDetail($id){
+        $user = new User();
+        if(!empty($id)){
+            $user = $user->leftJoin('drivers', 'drivers.user_id', '=', 'users.id')
+                    ->where('users.id', '=', $id)->where('users.role', '=', 2);
+                    //->leftJoin('media', 'media.module_id', '=', 'drivers.id');
+        }
+       // echo"<pre>";print_r($user->first());die;
+        return $user->first();
+    }
     /**
-     * Add vehicles .
+     * edit driver .
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function edit($id, Request $request){
-
+        $driver_detail = $this->getDetail($id);
         $gender = array('male'=>'male','female' => 'female','other' => 'other');
-
-        $driver_detail = User::where('id', '=', $id )->where('role','=',2)->first();
-        $driver_detail['image'] = '';        
-        $media =  Media::where('module', '=', 'driver')->where('module_id', '=', $id)->first();   
-        if($media){
-            $driver_detail['image'] =url("/")."/".$media['file_path'];
-        }    
-        //echo"<pre>";print_r($vehicle_detail);die;
         if ($request->isMethod('post')) {
             $data = $request->input('data');          
             $driver = User::where('id', '=', $id )->where('role','=',2)->first();

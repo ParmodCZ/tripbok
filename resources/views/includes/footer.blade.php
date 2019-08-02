@@ -38,6 +38,8 @@
 
 <script src="{{ asset('public/js/full-feature-tinymce.js')}}"></script>
 
+<script src="{{ asset('public/js/jquery.flagstrap.js')}}"></script>
+
 <script src="{{ asset('public/js/custom.js')}}"></script>
 
 <script src="{{ asset('public/js/sweet-alert.min.js')}}"></script>
@@ -51,8 +53,8 @@
 
 <script src="{{ asset('public/admin/js/admin.js')}}"></script>
 
-<script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
+<!-- <script src="{{ asset('public/admin/js/Chart.min.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/chart-area-demo.js')}}"></script>
 
-<script src="{{ asset('public/admin/js/chart-pie-demo.js')}}"></script>
+<script src="{{ asset('public/admin/js/chart-pie-demo.js')}}"></script> -->

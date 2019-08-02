@@ -18,6 +18,7 @@ class CreateMediaTable extends Migration
             $table->text('filename');
             $table->text('file_path')->nullable();
             $table->text('module')->nullable();
+            $table->text('submodule')->nullable();
             $table->bigInteger('module_id')->nullable();
             $table->timestamps();
         });

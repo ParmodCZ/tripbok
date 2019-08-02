@@ -44,4 +44,5 @@
 <link rel="stylesheet" href="{{ asset('public/css/dataTables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/dropzone.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/sweet-alert.css') }}">
+<link rel="stylesheet" href="{{ asset('public/css/flags.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}">

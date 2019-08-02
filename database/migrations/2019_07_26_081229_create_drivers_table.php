@@ -15,14 +15,16 @@ class CreateDriversTable extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('address');
-            $table->string('city');
-            $table->string('country');
-            $table->string('zip');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('gander');
+            $table->string('user_id');
+            $table->string('company_id')->nullable();
+            $table->string('language')->default('EN');
+            $table->string('currency')->default('USD');
+            $table->string('payment_email')->nullable();
+            $table->string('account_holder_name')->nullable();
+            $table->string('account_number')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('bank_location')->nullable();
+            $table->string('BIC_SWIFT_code')->nullable();
             $table->timestamps();
         });
     }

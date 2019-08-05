@@ -58,3 +58,6 @@
 <script src="{{ asset('public/admin/js/chart-area-demo.js')}}"></script>
 
 <script src="{{ asset('public/admin/js/chart-pie-demo.js')}}"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXMpUMMrjVgbWeWF99SfuFQhe06-ST62s&libraries=places&callback=initAutocomplete"
+        async defer>  	
+</script>

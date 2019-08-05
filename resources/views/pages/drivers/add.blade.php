@@ -72,7 +72,7 @@
       <div class="col-md-6">
         <div class="form-group">
           {{Form::label('Company','Company:', array('class' => 'form-control-label'))}}
-          {{Form::select('data[Driver][company_id]',[], '', $attributes=array('id'=>'Company','class'=>'form-control'))}} 
+          {{Form::select('data[Driver][company_id]',$company, '', $attributes=array('id'=>'Company','class'=>'form-control'))}} 
         </div>
       </div>
       <div class="col-md-6">

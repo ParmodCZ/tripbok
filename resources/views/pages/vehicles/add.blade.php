@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-  <h2>Stacked form</h2>
+  <h2>Add Vehicle</h2>
   {{ Form::open(array('url' => 'admin/vehicles/add', 'id'=>'VehileAddForm' ,'class'=>'needs-validation','novalidate'=>'novalidate','enctype'=>'multipart/form-data')) }}
     <div class="row">
       <div class="col-md-6">
@@ -23,7 +23,25 @@
       <div class="col-md-6">
         <div class="form-group">
           {{Form::label('vehicle_model','Vehicle Model:', array('class' => 'form-control-label'))}}
-          {{Form::text('data[Vehicle][model]', $value = null, $attributes =array('id'=>'vehicle_model', 'class'=>'form-control'))}}
+          {{Form::select('data[Vehicle][model]',$model, '', $attributes=array('id'=>'vehicle_model','class'=>'form-control','required' => 'required'))}}  
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>     
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('vehicle_company','Company:', array('class' => 'form-control-label'))}}
+          {{Form::select('data[Vehicle][company_id]',$company, '', $attributes=array('id'=>'vehicle_company','class'=>'form-control','required' => 'required'))}}  
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>     
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('vehicle_driver','Driver:', array('class' => 'form-control-label'))}}
+          {{Form::select('data[Vehicle][driver_id]',$drivers, '', $attributes=array('id'=>'vehicle_driver','class'=>'form-control','required' => 'required'))}}  
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>     
         </div>
       </div>
       <div class="col-md-6">
@@ -72,6 +90,27 @@
         <div class="form-group">
           {{Form::label('passenger_cancellation_charges','Passenger Cancellation Charges(in $):', array('class' => 'form-control-label'))}}
           {{Form::text('data[Vehicle][passenger_cancellation_charges]', $value = null, $attributes =array('id'=>'passenger_cancellation_charges', 'class'=>'form-control isnumaric'))}}
+          <div class="invalid-feedback">Please fill numaric this field.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('Waiting_time_limt','Waiting Time Limit ( in minute ):', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Vehicle][waiting_time_limt]', $value = null, $attributes =array('id'=>'Waiting_time_limt', 'class'=>'form-control isnumaric'))}}
+          <div class="invalid-feedback">Please fill numaric this field.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('Waiting_charge','Waiting Charges (Price In USD):', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Vehicle][waiting_charge]', $value = null, $attributes =array('id'=>'Waiting_charge', 'class'=>'form-control isnumaric'))}}
+          <div class="invalid-feedback">Please fill numaric this field.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('fTripHoldFees','InTransit Waiting Fee per minute (Price In USD):', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Vehicle][trip_hold_fees]', $value = null, $attributes =array('id'=>'fTripHoldFees', 'class'=>'form-control isnumaric'))}}
           <div class="invalid-feedback">Please fill numaric this field.</div>
         </div>
       </div>

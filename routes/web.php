@@ -93,6 +93,16 @@ Route::Group(['prefix'=>'admin'], function() {
 		Route::post('/edit/{id}', 'PassengerController@edit')->name('post_edit_passengers');
 		Route::post('/delete', 'PassengerController@delete')->name('post_delete_passengers');
 	});
+	//banners
+	Route::Group(['prefix'=>'banners'], function() {
+		Route::get('/index', 'BannerController@index')->name('get_banners_index');
+		Route::post('/indexing', 'BannerController@index_ajax')->name('ajax_banners_index');
+		Route::get('/add', 'BannerController@add')->name('get_add_banners');
+		Route::post('/add', 'BannerController@add')->name('post_add_banners');
+		Route::get('/edit/{id}', 'BannerController@edit')->name('get_edit_banners');
+		Route::post('/edit/{id}', 'BannerController@edit')->name('post_edit_banners');
+		Route::post('/delete', 'BannerController@delete')->name('post_delete_banners');
+	});
 
 
 });

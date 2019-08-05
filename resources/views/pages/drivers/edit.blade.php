@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-  <h2>Add Driver</h2>
+  <h2>Edit Driver</h2>
   {{ Form::open(array('url' => 'admin/drivers/edit/'.$driver_detail->user_id, 'id'=>'AdminDriverAddForm' ,'class'=>'needs-validation','novalidate'=>'novalidate','enctype'=>'multipart/form-data')) }}
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
+          <input type="hidden" name="data[User][id]" value="{{$driver_detail->user_id}}">
+          <input type="hidden" name="data[Driver][id]" value="{{$driver_detail->id}}">
           {{Form::label('name','Name:', array('class' => 'form-control-label'))}}
           {{Form::text('data[User][name]',$driver_detail->name, $attributes =array('id'=>'name', 'class'=>'form-control','required' => 'required'))}}
           <div class="valid-feedback">Valid.</div>
@@ -72,7 +74,7 @@
       <div class="col-md-6">
         <div class="form-group">
           {{Form::label('Company','Company:', array('class' => 'form-control-label'))}}
-          {{Form::select('data[Driver][company_id]',[],$driver_detail->company_id, $attributes=array('id'=>'Company','class'=>'form-control'))}} 
+          {{Form::select('data[Driver][company_id]',$company,$driver_detail->company_id, $attributes=array('id'=>'Company','class'=>'form-control'))}} 
         </div>
       </div>
       <div class="col-md-6">
@@ -140,7 +142,7 @@
         <div class="form-group">
           <div class="file_upload_div">
             <h4> Upload Image Here </h4>
-            {{Form::file('data[User][image]',['class'=>"file_upload",'id'=>'file_upload'])}}
+            {{Form::file('data[Driver][image]',['class'=>"file_upload",'id'=>'file_upload'])}}
             <div class="gallery"></div>
           </div>
         </div>

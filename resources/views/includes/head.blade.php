@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, user-scalable=no ">
 <meta name="description" content="">
 <meta name="author" content="">
 <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -38,7 +38,7 @@
 <link rel="stylesheet" href="{{ asset('public/admin/css/all.css') }}">
 <link rel="stylesheet" href="{{ asset('public/admin/css/font.css') }}">
 <link rel="stylesheet" href="{{ asset('public/admin/css/bootstrap.css') }}">
-
+<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
 <link rel="stylesheet" href="{{ asset('public/css/datepicker.css') }}">
 <link rel="stylesheet" href="{{ asset('public/css/dataTables.min.css') }}">

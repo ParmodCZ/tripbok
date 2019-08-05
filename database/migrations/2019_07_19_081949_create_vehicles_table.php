@@ -18,6 +18,8 @@ class CreateVehiclesTable extends Migration
             $table->string('vehicle_number');
             $table->string('type');
             $table->string('model')->nullable();
+            $table->string('company_id')->nullable();
+            $table->string('driver_id')->nullable();
             $table->bigInteger('seats')->nullable();
             $table->bigInteger('price_pr_km')->nullable()->comment = 'price per Km In dollar($)';
             $table->bigInteger('price_pr_min')->nullable()->comment = 'price per min In dollar($)';
@@ -25,6 +27,9 @@ class CreateVehiclesTable extends Migration
             $table->bigInteger('commission')->nullable()->comment = 'In hour(hr)';
             $table->bigInteger('passenger_cancellation_time')->nullable()->comment = 'In hour(hr)';
             $table->bigInteger('passenger_cancellation_charges')->nullable()->comment = 'In dollar($)';
+            $table->bigInteger('waiting_time_limt')->nullable()->comment = 'In minute';
+            $table->bigInteger('waiting_charge')->nullable()->comment = 'In dollar($)';
+            $table->bigInteger('trip_hold_fees')->nullable()->comment = 'Fee per minute In dollar($)';
             $table->dateTime('insurance_renewal_date');
             $table->timestamps();
         });

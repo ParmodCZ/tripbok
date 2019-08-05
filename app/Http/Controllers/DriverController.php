@@ -119,6 +119,7 @@ class DriverController extends Controller
      */
     public function add(Request $request){
     	$gender = array('male'=>'male','female' => 'female','other' => 'other');
+         $company = array(1 =>'gg',2=>'sg',3=>'gds',4=>'g',5=>'sgd',6=>'sdg' );
         if ($request->isMethod('post')) {
             $data = $request->input('data');
             //role
@@ -126,43 +127,43 @@ class DriverController extends Controller
             $user = User::create($data['User']);
             $data['Driver']['user_id'] =$user->id;            
             $driver = Driver::create($data['Driver']);
-            if($request->hasFile("data.User.image") && $driver){
-                $files = $request->file("data.User.image"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['User']['image'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'profile');
-                $media = Media::create($mediadata);
-            }
-            if($request->hasFile("data.Driver.license") && $driver){
-                $files = $request->file("data.Driver.license"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['license'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'license');
-                $media = Media::create($mediadata);
-            }
-            if($request->hasFile("data.Driver.insurance") && $driver){
-                $files = $request->file("data.Driver.insurance"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['insurance'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'insurance');
-                $media = Media::create($mediadata);
-            }
-            
             if($driver){
-                $message = "New driver has been successfully created!";
-                $var     = "success";
+                if($request->hasFile("data.Driver.image")){
+                    $files = $request->file("data.Driver.image"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['image'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'profile');
+                    $media = Media::create($mediadata);
+                }
+                if($request->hasFile("data.Driver.license")){
+                    $files = $request->file("data.Driver.license"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['license'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'license');
+                    $media = Media::create($mediadata);
+                }
+                if($request->hasFile("data.Driver.insurance")){
+                    $files = $request->file("data.Driver.insurance"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['insurance'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id ,'submodule'=>'insurance');
+                    $media = Media::create($mediadata);
+                }
+                    $message = "New driver has been successfully created!";
+                    $var     = "success";
+            
             }else{
                 $message = "There is some problem while creating the show. Please try again.";
                 $var     = "error";
@@ -170,7 +171,7 @@ class DriverController extends Controller
             Session::flash($var , $message);
             return redirect('admin/drivers/index');
         }else{
-            return view('pages.drivers.add')->with(compact('gender'));
+            return view('pages.drivers.add')->with(compact('gender','company'));
         }
          
     }
@@ -187,34 +188,71 @@ class DriverController extends Controller
     }
     /**
      * edit driver .
-     *
+     * $id  is user id
+     * $request is array of data 
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function edit($id, Request $request){
-        $driver_detail = $this->getDetail($id);
+        $driver_detail = $this->getDetail($id); 
         $gender = array('male'=>'male','female' => 'female','other' => 'other');
+        $company = array(1 =>'gg',2=>'sg',3=>'gds',4=>'g',5=>'sgd',6=>'sdg' );
         if ($request->isMethod('post')) {
-            $data = $request->input('data');          
-            $driver = User::where('id', '=', $id )->where('role','=',2)->first();
-            if($request->hasFile("data.Driver.image")){
-                $files = $request->file("data.Driver.image"); 
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
-                $fileNameToStore = 'driver'.time().'.'.$extension;
-                $file_path ='storage/app/';
-                $file_s = $request->data['Driver']['image'];
-                $file_path .= $file_s->storeAs('public/media/driver/'.$driver->id, $fileNameToStore);
-
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$driver->id );
-                $media_exist = Media::where('module','=','driver')->where('module_id','=',$driver->id)->first();
-                if($media_exist){
-                    $media_exist->update($mediadata);
-                }else{
-                   $media = Media::create($mediadata); 
-                }
-            }
-            $driver->update($data['Driver']);
-            if($driver){
+            $data = $request->input('data');   
+               
+            $user = User::where('id', '=', $id )->where('role','=',2)->first();
+            $user = $user->update($data['User']);
+            $driver = Driver::where('id', '=',$data['Driver']['id'] )->where('user_id','=',$id)->first();
+            $driver = $driver->update($data['Driver']);
+            //echo"<pre>";print_r($driver);die;
+            if ($driver) {
+                if($request->hasFile("data.Driver.image")){
+                    $files = $request->file("data.Driver.image"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['image'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$data['Driver']['id'], $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$data['Driver']['id'],'submodule'=>'profile' );
+                    $media_exist = Media::where('module','=','driver')->where('submodule','=','profile')->where('module_id','=',$data['Driver']['id'])->first();
+                    if($media_exist){
+                        $media_exist->update($mediadata);
+                    }else{
+                       $media = Media::create($mediadata); 
+                    }
+                }    
+                if($request->hasFile("data.Driver.license")){
+                    $files = $request->file("data.Driver.license"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['license'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$data['Driver']['id'], $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$data['Driver']['id'],'submodule'=>'license' );
+                    $media_exist = Media::where('module','=','driver')->where('submodule','=','license')->where('module_id','=',$data['Driver']['id'])->first();
+                    if($media_exist){
+                        $media_exist->update($mediadata);
+                    }else{
+                       $media = Media::create($mediadata); 
+                    }
+                } 
+                if($request->hasFile("data.Driver.insurance")){
+                    $files = $request->file("data.Driver.insurance"); 
+                    $filename = $files->getClientOriginalName();
+                    $extension = $files->getClientOriginalExtension();
+                    $fileNameToStore = 'driver'.time().'.'.$extension;
+                    $file_path ='storage/app/';
+                    $file_s = $request->data['Driver']['insurance'];
+                    $file_path .= $file_s->storeAs('public/media/driver/'.$data['Driver']['id'], $fileNameToStore);
+                    $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'driver','module_id'=>$data['Driver']['id'],'submodule'=>'insurance' );
+                    $media_exist = Media::where('module','=','driver')->where('submodule','=','insurance')->where('module_id','=',$data['Driver']['id'])->first();
+                    if($media_exist){
+                        $media_exist->update($mediadata);
+                    }else{
+                       $media = Media::create($mediadata); 
+                    }
+                }            
                 $message = "driver has been successfully update!";
                 $var     = "success";
             }else{
@@ -225,7 +263,7 @@ class DriverController extends Controller
            return Redirect::back();
            // return redirect('admin/vehicles/index');
         }else{
-            return view('pages.drivers.edit')->with(compact('gender','driver_detail'));
+            return view('pages.drivers.edit')->with(compact('gender','driver_detail','company'));
         }
          
     }    

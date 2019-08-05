@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Vehicle;
+use App\Driver;
 use App\Media;
 use Session;
 use Redirect;
@@ -116,8 +117,16 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function add(Request $request){
-         $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SEDAN' => 'SEDAN','Crossover' => 'Crossover','Coupe' => 'Coupe','Van' => 'Van','Wagon' => 'Wagon');
+        $vehicles_type = array(''=>'CHOOSE MAKE','ACURA' => 'ACURA','ALFA ROMEO' => 'ALFA ROMEO','AMERICAN IRONHORSE' => 'AMERICAN IRONHORSE','APRILIA' => 'APRILIA','AUDI' => 'AUDI','AUTOCAR LLC.' => 'AUTOCAR LLC.');
+        $model = array('A3' =>'A3','A4'=>'A4','A6'=>'A6','CL'=>'CL','EL'=>'EL','INTEGRA'=>'INTEGRA' );
+         $company = array(1 =>'gg',2=>'sg',3=>'gds',4=>'g',5=>'sgd',6=>'sdg' );
+         $alldrivers = Driver::with('users')->get();
+         $drivers = array();
+         foreach ($alldrivers as $value) {
+           $drivers[$value->id] =$value->users->name;
+         }
 
+         //echo "<pre>";print_r($drivers);die;
         if ($request->isMethod('post')) {
 
             $data = $request->input('data');
@@ -137,7 +146,7 @@ class VehiclesController extends Controller
                 $file_path ='storage/app/';
                 $file_s = $request->data['Vehicle']['image'];
                 $file_path .= $file_s->storeAs('public/media/vehicle/'.$vehicle->id, $fileNameToStore);
-                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$vehicle->id );
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$vehicle->id,'submodule'=>'image' );
                 $media = Media::create($mediadata);
             }
             
@@ -151,7 +160,7 @@ class VehiclesController extends Controller
             Session::flash($var , $message);
             return redirect('admin/vehicles/index');
         }else{
-            return view('pages.vehicles.add')->with(compact('vehicles_type'));
+            return view('pages.vehicles.add')->with(compact('vehicles_type','model','company','drivers'));
         }
          
     }
@@ -163,7 +172,14 @@ class VehiclesController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function edit($id, Request $request){
-        $vehicles_type = array(''=>'select vehicle type','SUV' => 'SUV','SEDAN' => 'SEDAN','Crossover' => 'Crossover','Coupe' => 'Coupe','Van' => 'Van','Wagon' => 'Wagon');
+        $vehicles_type = array(''=>'CHOOSE MAKE','ACURA' => 'ACURA','ALFA ROMEO' => 'ALFA ROMEO','AMERICAN IRONHORSE' => 'AMERICAN IRONHORSE','APRILIA' => 'APRILIA','AUDI' => 'AUDI','AUTOCAR LLC.' => 'AUTOCAR LLC.');
+        $model = array('A3' =>'A3','A4'=>'A4','A6'=>'A6','CL'=>'CL','EL'=>'EL','INTEGRA'=>'INTEGRA' );
+         $company = array(1 =>'gg',2=>'sg',3=>'gds',4=>'g',5=>'sgd',6=>'sdg' );
+         $alldrivers = Driver::with('users')->get();
+         $drivers = array();
+         foreach ($alldrivers as $value) {
+           $drivers[$value->id] =$value->users->name;
+         }
         $vehicle_detail = Vehicle::where('id', '=', $id )->first();
         $vehicle_detail['image'] = '';        
         $media =  Media::where('module', '=', 'vehicle')->where('module_id', '=', $id)->first();   
@@ -172,15 +188,29 @@ class VehiclesController extends Controller
         }    
         //echo"<pre>";print_r($vehicle_detail);die;
         if ($request->isMethod('post')) {
-
             $data = $request->input('data');
             $string_date = strtotime($data['Vehicle']['insurance_renewal_date']);
-            $data['Vehicle']['insurance_renewal_date'] = date("Y-m-d",$string_date);
-            // $date=date_create_from_format("m/d/Y",$data['Vehicle']['insurance_renewal_date']);
-            // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");           
+            $data['Vehicle']['insurance_renewal_date'] = date("Y-m-d",$string_date);          
             $vehicle = Vehicle::find($id);
-            $vehicle->update($data['Vehicle']);
+            $vehicle = $vehicle->update($data['Vehicle']);
             if($vehicle){
+              if($request->hasFile("data.Vehicle.image")){
+                $files = $request->file("data.Vehicle.image"); 
+                $filename = $files->getClientOriginalName();
+                $extension = $files->getClientOriginalExtension();
+                $fileNameToStore = 'vehicle'.time().'.'.$extension;
+                $file_path ='storage/app/';
+                $file_s = $request->data['Vehicle']['image'];
+                $file_path .= $file_s->storeAs('public/media/vehicle/'.$id, $fileNameToStore);
+                $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$id,'submodule'=>'image' );
+
+                $media_exist = Media::where('module','=','vehicle')->where('submodule','=','image')->where('module_id','=',$id)->first();
+                if($media_exist){
+                    $media_exist->update($mediadata);
+                }else{
+                   $media = Media::create($mediadata); 
+                }
+              }
                 $message = "vehicle has been successfully update!";
                 $var     = "success";
             }else{
@@ -191,7 +221,7 @@ class VehiclesController extends Controller
            return Redirect::back();
            // return redirect('admin/vehicles/index');
         }else{
-            return view('pages.vehicles.edit')->with(compact('vehicles_type','vehicle_detail'));
+            return view('pages.vehicles.edit')->with(compact('vehicles_type','vehicle_detail','model','company','drivers'));
         }
          
     }  

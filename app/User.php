@@ -40,9 +40,15 @@ class User extends Authenticatable
 
     /**
     * relation betwwen users and trips
-    * type: one to many (inverse)
     **/
     public function trips(){
         return $this->hasMany('App\Trip');
+    }
+
+    /**
+    * relation betwwen users and drivers
+    **/
+    public function drivers(){
+        return $this->hasMany('App\Driver');
     }
 }

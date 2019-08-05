@@ -25,7 +25,7 @@ $(function() {
       }
     }
   };
-  $('#file_upload').on('change', function() {
+  $('.file_upload').on('change', function() {
       imagesPreview(this, 'div.gallery');
   });
 });
@@ -77,50 +77,63 @@ function DeleteModuleAjax(data=null,url='',that=null,module='',tabledata=null){
 }
 
 $(document).ready(function () {
+  if($('#Validity0').is(':checked')) {
+    $('.bannerActiveDate').css('display','block');
+  }
+  $('input:radio[name="data[Banner][validity]"]').change(
+    function(){
+        if ($(this).is(':checked') && $(this).val() == 0) {
+         $('.bannerActiveDate').css('display','block');
+        }else{
+          $('.bannerActiveDate').css('display','none');
+        }
+    });
+
   //select country
   $('#selectcountry').flagStrap({
     placeholder: {
         value: "",
         text: "Country of origin"
     }
-});
-
-$.getJSON(APP_URL+'/public/countries/countries.json',function(data){
-  var myCountry = '';
-  $.each(data.countries, function(key,val){
-    myCountry +='<option value="'+val.id+'">'+val.name+'</option>';
   });
-  $('#myCountry').html(myCountry);
-});
 
-$("#myCountry").change(function(){
-  var thatval =  this.value;
-  $.getJSON(APP_URL+'/public/countries/states.json',function(data){
-    var returnedData = $.grep(data.states, function (element, index) {
-      return element.country_id == thatval;
+  $.getJSON(APP_URL+'/public/countries/countries.json',function(data){
+    var myCountry = '';
+    $.each(data.countries, function(key,val){
+      myCountry +='<option value="'+val.id+'">'+val.name+'</option>';
     });
-    var myState = '';
-    $.each(returnedData, function(key,val){
-      myState +='<option value="'+val.id+'">'+val.name+'</option>';
-    });
-    $('#myState').html(myState);
+    $('#myCountry').html(myCountry);
   });
-});
 
-$("#myState").change(function(){
-  var thatval =  this.value;
-  $.getJSON(APP_URL+'/public/countries/cities.json',function(data){
-    console.log(data);
-    var returnedData = $.grep(data.states, function (element, index) {
-      return element.state_id == thatval;
+  $("#myCountry").change(function(){
+    var thatval =  this.value;
+    $.getJSON(APP_URL+'/public/countries/states.json',function(data){
+      var returnedData = $.grep(data.states, function (element, index) {
+        return element.country_id == thatval;
+      });
+      var myState = '';
+      $.each(returnedData, function(key,val){
+        myState +='<option value="'+val.id+'">'+val.name+'</option>';
+      });
+      $('#myState').html(myState);
     });
-    var myCity = '';
-    $.each(returnedData, function(key,val){
-      myCity +='<option value="'+val.id+'">'+val.name+'</option>';
-    });
-    $('#myCity').html(myCity);
   });
-});
+
+  $("#myState").change(function(){
+    var thatval =  this.value;
+    $.getJSON(APP_URL+'/public/countries/cities.json',function(data){
+      console.log(data);
+      var returnedData = $.grep(data.cities, function (element, index) {
+        return element.state_id == thatval;
+      });
+      console.log(returnedData);
+      var myCity = '';
+      $.each(returnedData, function(key,val){
+        myCity +='<option value="'+val.id+'">'+val.name+'</option>';
+      });
+      $('#myCity').html(myCity);
+    });
+  });
 
 
 
@@ -281,6 +294,25 @@ $("#myState").change(function(){
           { orderable: false, targets: -1 }
       ]
   });
+  //banners
+  CouponTable = $('#banners_index').DataTable({
+    "aaSorting": [],
+  "processing": true,
+  "serverSide": true,
+  "stateSave" : true,
+  "ajax": {"url":APP_URL+'/admin/banners/indexing',"type": "POST"},
+  "columns": [
+          {'data': 'media',orderable: false, searchable: false},
+          {'data': 'title','name':'title' },
+          {'data' : 'activation_date','name':'activation_date' },
+          {'data' : 'expire_date','name':'expire_date' },
+          {'data' : 'status','name':'status' },
+          {"data": "actions",orderable: false, searchable: false}
+        ],
+  "columnDefs": [
+          { orderable: false, targets: -1 }
+      ]
+  });
 
 });
 
@@ -339,6 +371,17 @@ function deleteCoupon(id,that){
     DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,CouponTable);
   }
 }
+//delete banners
+function deleteBanner(id,that){
+  if(id != '' || id != 0){
+    var this_obj = that;          
+    var data = {'id':id};
+    var moduleUrl ='/admin/banners/delete';
+    var moduleName ='Banner';
+    DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,CouponTable);
+  }
+}
+
 function deleteMail(id,that){
   if(id != '' || id != 0){
     var this_obj = that;          
@@ -346,5 +389,67 @@ function deleteMail(id,that){
     // var moduleUrl ='/admin/coupons/delete';
     // var moduleName ='Coupon';
     // DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,MailTable);
+  }
+}
+/************************************************* */
+var placeSearch, autocomplete;
+
+var componentForm = {
+  street_number: 'short_name',
+  route: 'long_name',
+  locality: 'long_name',
+  administrative_area_level_1: 'short_name',
+  country: 'long_name',
+  postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+  // Create the autocomplete object, restricting the search predictions to
+  // geographical location types.
+  autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('autocomplete'), {types: ['geocode']});
+
+  // Avoid paying for data that you don't need by restricting the set of
+  // place fields that are returned to just the address components.
+  autocomplete.setFields(['address_component']);
+
+  // When the user selects an address from the drop-down, populate the
+  // address fields in the form.
+  autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+
+  for (var component in componentForm) {
+    document.getElementById(component).value = '';
+    document.getElementById(component).disabled = false;
+  }
+
+  // Get each component of the address from the place details,
+  // and then fill-in the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+    var addressType = place.address_components[i].types[0];
+    if (componentForm[addressType]) {
+      var val = place.address_components[i][componentForm[addressType]];
+      document.getElementById(addressType).value = val;
+    }
+  }
+}
+
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      var circle = new google.maps.Circle(
+          {center: geolocation, radius: position.coords.accuracy});
+      autocomplete.setBounds(circle.getBounds());
+    });
   }
 }

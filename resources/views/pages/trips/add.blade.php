@@ -6,8 +6,22 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
+          {{Form::label('Name','Name:', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Trip][name]', $value = null, $attributes =array('id'=>'Name', 'class'=>'form-control','required' => 'required' ))}}
+           <div class="invalid-feedback">Please fill out email this field.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          {{Form::label('Email','Email:', array('class' => 'form-control-label'))}}
+          {{Form::text('data[Trip][email]', $value = null, $attributes =array('id'=>'Email', 'class'=>'form-control','required' => 'required' ))}}
+           <div class="invalid-feedback">Please fill out email this field.</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group locationField">
           {{Form::label('from','From:', array('class' => 'form-control-label'))}}
-          {{Form::text('data[Trip][from]', $value = null, $attributes =array('id'=>'form', 'class'=>'form-control','required' => 'required' ))}}
+          {{Form::text('data[Trip][from]', $value = null, $attributes =array('id'=>'autocomplete', 'class'=>'form-control','required' => 'required','onFocus'=>'geolocate()' ))}}
            <div class="invalid-feedback">Please fill out email this field.</div>
         </div>
       </div>

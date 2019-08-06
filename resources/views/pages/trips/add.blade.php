@@ -21,7 +21,7 @@
       <div class="col-md-6">
         <div class="form-group locationField">
           {{Form::label('from','From:', array('class' => 'form-control-label'))}}
-          {{Form::text('data[Trip][from]', $value = null, $attributes =array('id'=>'autocomplete', 'class'=>'form-control','required' => 'required','onFocus'=>'geolocate()' ))}}
+          {{Form::text('data[Trip][from]', $value = null, $attributes =array('id'=>'from', 'class'=>'form-control','required' => 'required' ))}}
            <div class="invalid-feedback">Please fill out email this field.</div>
         </div>
       </div>
@@ -33,6 +33,13 @@
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
       </div>
+      </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div id="map" style="width:100%;height: 500px;"></div>
+      </div>
+    </div>
+    <div  class="row">
       <div class="col-md-6">
         <div class="form-group">
           {{Form::label('status','Status:', array('class' => 'form-control-label'))}}

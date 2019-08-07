@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Trip extends Model
 {
     protected $fillable = [
-    	'status', 'type', 'driver_id', 'passenger_id', 'form', 'to', 'start_time', 'end_time','is_confirmed','fare'
+    	'status', 'type', 'driver_id', 'passenger_id', 'from_', 'to', 'start_time', 'end_time','is_confirmed','fare','from_lat_long','from_lat','from_long','to_lat_long','to_lat','to_long'
 	];
 
 	/**

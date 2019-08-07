@@ -10,52 +10,7 @@
 // function imageIsLoaded(e) {
 // 	$('#myImg').attr('src', e.target.result);
 // };
-
-var eFlatTrip = 'No';
-         var eTypeQ11 = 'yes';
-         var map;
-         var geocoder;
-         var circle;
-         var markers = [];
-         var driverMarkers = [];
-         var bounds = [];
-         var newLocations = "";
-         var autocomplete_from;
-         var autocomplete_to;
-         var eLadiesRide = 'No';
-         var eHandicaps = 'No';
-         var eChildSeat = 'No';
-         var eWheelChair = 'No';
-         //var geocoder = new google.maps.Geocoder();
-         //var directionsService = new google.maps.DirectionsService(); // For Route Services on map
-         var directionsOptions = {// For Polyline Route line options on map
-             polylineOptions: {
-                 strokeColor: '#FF7E00',
-                 strokeWeight: 5
-             }
-         };
-         // var directionsDisplay = new google.maps.DirectionsRenderer(directionsOptions);
-         var showsurgemodal = "Yes";
-
 $(function() {
-var from = document.getElementById('from');
-autocomplete_from = new google.maps.places.Autocomplete(from);
-var to = document.getElementById('to');
-autocomplete_to = new google.maps.places.Autocomplete(to);
-google.maps.event.addEventListener(autocomplete_from,'place_changed', function () {
-                                                var place = autocomplete_from.getPlace();                                                     
-                                                console.log(place.geometry.location);
-                                            });
-google.maps.event.addEventListener(autocomplete_to,'place_changed', function () {
-                                                var place = autocomplete_from.getPlace();                                                     
-                                                console.log(place.geometry.location);
-                                            });
-
-
-
-
-
-
   // Multiple images preview in browser
   var imagesPreview = function(input, placeToInsertImagePreview) {
     if (input.files) {
@@ -140,13 +95,22 @@ $(document).ready(function () {
         text: "Country of origin"
     }
   });
-
+   //select country code
+  $('#countrycode').on('change', function() {
+    //alert( this.value );
+    $('#Ccode').val(this.value);
+  });
   $.getJSON(APP_URL+'/public/countries/countries.json',function(data){
     var myCountry = '';
+    var countrycode = '';
     $.each(data.countries, function(key,val){
       myCountry +='<option value="'+val.id+'">'+val.name+'</option>';
+      countrycode +='<option value="'+val.phoneCode+'">'+val.name+'</option>';
+
     });
+    $('#Ccode').val(data.countries[0].phoneCode);
     $('#myCountry').html(myCountry);
+    $('#countrycode').html(countrycode);
   });
 
   $("#myCountry").change(function(){
@@ -435,47 +399,3 @@ function deleteMail(id,that){
     // DeleteModuleAjax(data,moduleUrl,this_obj,moduleName,MailTable);
   }
 }
-/************************************************* */
-// var autocomplete_from ='';
-// var autocomplete_to ='';
-// function initMap() {
-//         var directionsService = new google.maps.DirectionsService();
-//         var directionsRenderer = new google.maps.DirectionsRenderer();
-//         var map = new google.maps.Map(document.getElementById('map'), {
-//           zoom: 7,
-//           center: {lat: 41.85, lng: -87.65}
-//         });
-//         directionsRenderer.setMap(map);
-
-//         var onChangeHandler = function() {
-//           calculateAndDisplayRoute(directionsService, directionsRenderer);
-//         };
-//         var from = document.getElementById('from');
-//         autocomplete_from = new google.maps.places.Autocomplete(from);
-//         var to = document.getElementById('to');
-//         autocomplete_to = new google.maps.places.Autocomplete(to);
-//         google.maps.event.addEventListener(autocomplete_from,'place_changed', function () {
-//                                                         var place = autocomplete_from.getPlace();                                                     
-//                                                         console.log(place.geometry.location);
-//                                                     });
-//         google.maps.event.addEventListener(autocomplete_to,'place_changed', function () {
-//                                                         var place = autocomplete_from.getPlace();                                                     
-//                                                         console.log(place.geometry.location);
-//                                                     });
-//       }
-
-// function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-//   directionsService.route(
-//       {
-//         origin: {query: document.getElementById('from').value},
-//         destination: {query: document.getElementById('to').value},
-//         travelMode: 'DRIVING'
-//       },
-//       function(response, status) {
-//         if (status === 'OK') {
-//           directionsRenderer.setDirections(response);
-//         } else {
-//           window.alert('Directions request failed due to ' + status);
-//         }
-//       });
-// }

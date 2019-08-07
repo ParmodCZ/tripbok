@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Trip;
 use App\User;
+use App\Driver;
 use Session;
 use Redirect;
 class TripController extends Controller
@@ -111,9 +112,25 @@ class TripController extends Controller
     public function add(Request $request){
 
     	$status = array('active'=>'active','completed' => 'completed','booked' => 'booked','cancelled'=>'cancelled');
+        $drivers =  Driver::all();
+        $driver = array();
+        foreach ($drivers as $value) {
+          $driver[$value->id] =$value->name;
+        }
+
         $confirm = array(0 =>'No',1=>'Yes' );
         if ($request->isMethod('post')) {
             $data = $request->input('data');
+            //echo"<pre>";print_r($data);die;
+            $data['User']['password'] = 'Null';
+            $user = User::where('phone', '=', $data['User']['phone'])->first();
+            $data['Trip']['passenger_id'] ='';
+            if($user){
+                $data['Trip']['passenger_id'] =$user->id;
+            }else{
+                $user = User::create($data['User']); 
+                $data['Trip']['passenger_id'] =$user->id;
+            }
             $driver = Trip::create($data['Trip']);     
             if($driver){
                 $message = "New Trip has been successfully created!";
@@ -125,7 +142,7 @@ class TripController extends Controller
             Session::flash($var , $message);
             return redirect('admin/trips/index');
         }else{
-            return view('pages.trips.add')->with(compact('status','confirm'));
+            return view('pages.trips.add')->with(compact('status','confirm','driver'));
         }  
     }
 

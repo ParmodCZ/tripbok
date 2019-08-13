@@ -123,20 +123,15 @@ class VehiclesController extends Controller
          $alldrivers = Driver::with('users')->get();
          $drivers = array();
          foreach ($alldrivers as $value) {
-           $drivers[$value->id] =$value->users->name;
+           $drivers[$value->users->id] =$value->users->name;
          }
-
          //echo "<pre>";print_r($drivers);die;
         if ($request->isMethod('post')) {
-
             $data = $request->input('data');
-
             $string_date = strtotime($data['Vehicle']['insurance_renewal_date']);
             $data['Vehicle']['insurance_renewal_date'] = date("Y-m-d",$string_date);
-
             // $date=date_create_from_format("m/d/Y",$data['Vehicle']['insurance_renewal_date']);
             // $data['Vehicle']['insurance_renewal_date'] = date_format($date,"Y-m-d");
-
             $vehicle = Vehicle::create($data['Vehicle']);
             if($request->hasFile("data.Vehicle.image") && $vehicle){
                 $files = $request->file("data.Vehicle.image"); 
@@ -148,8 +143,7 @@ class VehiclesController extends Controller
                 $file_path .= $file_s->storeAs('public/media/vehicle/'.$vehicle->id, $fileNameToStore);
                 $mediadata = array('filename' =>$fileNameToStore ,'file_path'=>$file_path, 'module'=>'vehicle','module_id'=>$vehicle->id,'submodule'=>'image' );
                 $media = Media::create($mediadata);
-            }
-            
+            }           
             if($vehicle){
                 $message = "New vehicle has been successfully created!";
                 $var     = "success";

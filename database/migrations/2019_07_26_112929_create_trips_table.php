@@ -19,11 +19,17 @@ class CreateTripsTable extends Migration
             $table->boolean('is_confirmed')->default(0);
             $table->bigInteger('driver_id')->nullable();
             $table->bigInteger('passenger_id')->nullable();
-            $table->string('from');
+            $table->string('from_');
             $table->string('to');
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable();
             $table->bigInteger('fare')->nullable()->comment = 'In Doller ($)';
+            $table->string('from_lat_long')->nullable();
+            $table->string('from_lat')->nullable();
+            $table->string('from_long')->nullable();
+            $table->string('to_lat_long')->nullable();
+            $table->string('to_lat')->nullable();
+            $table->string('to_long')->nullable();
             $table->timestamps();
         });
     }

@@ -17,9 +17,11 @@ class CreateDriversTable extends Migration
             $table->bigIncrements('id');
             $table->string('user_id');
             $table->string('company_id')->nullable();
+            $table->string('vehicle_id')->nullable();
             $table->string('language')->default('EN');
             $table->string('currency')->default('USD');
             $table->string('payment_email')->nullable();
+            $table->integer('rating')->nullable();
             $table->string('account_holder_name')->nullable();
             $table->string('account_number')->nullable();
             $table->string('bank_name')->nullable();

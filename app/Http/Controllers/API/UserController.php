@@ -36,7 +36,7 @@ public $successStatus = 200;
 
         } 
     }
-/** 
+    /** 
      * Register api 
      * 
      * @return \Illuminate\Http\Response 
@@ -164,6 +164,7 @@ public $successStatus = 200;
         ->where('id', '=',$id)
         ->with('drivers','passengers');
         $value = $tripdetail->first();
+        //echo"<pre>";print_r($value->drivers->driver);die;
             $trip = array();
             $vehicle = $this->assignedVehilceToDriver($value->driver_id);
             $trip['full_to'] =$value->to;
@@ -177,8 +178,8 @@ public $successStatus = 200;
             $trip['status'] =$value->status;
             $trip['is_confirmed'] =$value->is_confirmed;
             $trip['driver_id'] =$value->driver_id;
-            $trip['driver_name'] =$value['drivers']->name;
-            $trip['driver_rating'] =$value['drivers']->rating;
+            $trip['driver_name'] =$value->drivers->name;
+            $trip['driver_rating'] =$value->drivers->driver->rating;
             if($vehicle){
                 $trip['vehicle_name'] =$vehicle->model;
                 $trip['vehicle_id'] =$vehicle->id;
@@ -188,5 +189,14 @@ public $successStatus = 200;
             $trip = (object) $trip;
         return response()->json(['data' => $trip], $this-> successStatus); 
     } 
+
+    /** 
+    * driver detail api 
+    * 
+    * @return in json
+    */ 
+    public function driverdetail(Request $request) {  
+        
+    }
 
 }

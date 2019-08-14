@@ -22,4 +22,5 @@ Route::post('register', 'API\UserController@register');
 Route::group(['middleware' => 'auth:api'], function(){
 Route::post('trips-list', 'API\UserController@alltrips');
 Route::post('trips-detail', 'API\UserController@tripdetail');
+Route::post('driver-detail', 'API\UserController@driverdetail');
 });

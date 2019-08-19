@@ -22,4 +22,8 @@ class Trip extends Model
     	return $this->belongsTo(User::class,'passenger_id','id');
 	}
 
+    public function ratings(){
+        return $this->hasOne('App\DriverRating','id');
+    }
+
 }

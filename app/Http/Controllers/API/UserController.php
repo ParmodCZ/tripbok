@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\User; 
 use App\Trip;
 use App\Vehicle;
+use App\Media;
+use App\DriverRating;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Validation\Rule;
 use Validator;
@@ -162,9 +164,9 @@ public $successStatus = 200;
         $user_id = $request->user_id;
         $tripdetail =Trip::where('passenger_id', '=', $user_id)
         ->where('id', '=',$id)
-        ->with('drivers','passengers');
+        ->with('drivers','passengers','ratings');
         $value = $tripdetail->first();
-        //echo"<pre>";print_r($value->drivers->driver);die;
+        //echo"<pre>";print_r($value->ratings);die;
             $trip = array();
             $vehicle = $this->assignedVehilceToDriver($value->driver_id);
             $trip['full_to'] =$value->to;
@@ -179,7 +181,7 @@ public $successStatus = 200;
             $trip['is_confirmed'] =$value->is_confirmed;
             $trip['driver_id'] =$value->driver_id;
             $trip['driver_name'] =$value->drivers->name;
-            $trip['driver_rating'] =$value->drivers->driver->rating;
+            $trip['driver_rating'] =$value->ratings->rating;
             if($vehicle){
                 $trip['vehicle_name'] =$vehicle->model;
                 $trip['vehicle_id'] =$vehicle->id;
@@ -196,7 +198,24 @@ public $successStatus = 200;
     * @return in json
     */ 
     public function driverdetail(Request $request) {  
-        
+        $id = $request->id;
+        $driver = User::where('id', '=',$id);
+        $driver = $driver->with('driver')->first();
+        $ratings = DriverRating::where('driver_id', '=', $id)->get();
+        $total = $ratings->count();
+        $sum = $ratings->sum(function($ratings) {
+            return $ratings->rating;
+        });
+        $pro_pic = Media::where('module', '=', 'driver')
+                    ->where('module_id', '=', $id)
+                    ->where('submodule', '=', 'profile')
+                    ->first();
+        if($pro_pic){
+           $driver->driver->profile =url('/').'/'.$pro_pic->file_path; 
+        }
+        $driver->driver->rating = round($sum/$total);
+
+        return response()->json(['data' => $driver], $this-> successStatus); 
     }
 
 }

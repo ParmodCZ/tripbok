@@ -7,9 +7,12 @@ use App\Trip;
 use App\Vehicle;
 use App\Media;
 use App\DriverRating;
+use App\Driver;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Validation\Rule;
 use Validator;
+use Carbon\Carbon;
+use DB;
 class UserController extends Controller 
 {
 public $successStatus = 200;
@@ -213,9 +216,39 @@ public $successStatus = 200;
         if($pro_pic){
            $driver->driver->profile =url('/').'/'.$pro_pic->file_path; 
         }
-        $driver->driver->rating = round($sum/$total);
 
+        $created = new Carbon($driver->created_at);
+        $now = Carbon::now();
+        $difference = ($created->diff($now)->days < 1)
+            ? 'today'
+            : $created->diffForHumans($now);
+
+        $driver->driver->rating = round($sum/$total);
+        $driver->driver->experience =  $difference;
         return response()->json(['data' => $driver], $this-> successStatus); 
+    }
+
+    // driver filter nearby rider 
+    public function nearbyDriver(Request $request){
+        $latitude= $request->latitude;
+        $longitude=$request->longitude;
+        //echo"<pre>";print_r($request->all());die;
+        // $search_drivers= Driver::selectRaw('*, ( 3959 * acos( cos( radians('.$latitude.') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians('.$longitude.') ) + sin( radians('.$latitude.') ) * sin( radians( latitude ) ) ) ) AS distance')
+        //      ->having('distance', '<',5)
+        //      ->orderBy('distance');
+
+
+       $search_drivers= DB::table("drivers")
+        ->select("*"
+            ,DB::raw("6371 * acos(cos(radians(" . $latitude . ")) 
+            * cos(radians(drivers.latitude)) 
+            * cos(radians(drivers.longitude) - radians(" . $longitude . ")) 
+            + sin(radians(" .$latitude. ")) 
+            * sin(radians(drivers.latitude))) AS distance"))
+            ->having('distance', '<',5)
+            ->get();
+
+        return response()->json(['data' => $search_drivers], $this-> successStatus);
     }
 
 }

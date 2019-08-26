@@ -23,4 +23,5 @@ Route::group(['middleware' => 'auth:api'], function(){
 Route::post('trips-list', 'API\UserController@alltrips');
 Route::post('trips-detail', 'API\UserController@tripdetail');
 Route::post('driver-detail', 'API\UserController@driverdetail');
+Route::post('nearby-driver', 'API\UserController@nearbyDriver');
 });

@@ -27,6 +27,9 @@ class CreateDriversTable extends Migration
             $table->string('bank_name')->nullable();
             $table->string('bank_location')->nullable();
             $table->string('BIC_SWIFT_code')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('geo_lat_long')->nullable();
             $table->timestamps();
         });
     }

@@ -187,7 +187,7 @@ function getAddress(mDlatitude, mDlongitude, addId) {
                 document.getElementById('#' + addId).value = "No results";
             }
         } else {
-            document.getElementById('#' + addId).value = 'Active';//status;
+            document.getElementById('#' + addId).value = status;
         }
     });
 }

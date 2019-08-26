@@ -266,8 +266,7 @@ class DriverController extends Controller
             return view('pages.drivers.edit')->with(compact('gender','driver_detail','company'));
         }
          
-    }    
-
+    }   
     // Delete Drivers
     public function delete(Request $request){
         if ($request->isMethod('post')) {

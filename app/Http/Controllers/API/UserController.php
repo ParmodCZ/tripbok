@@ -125,7 +125,10 @@ public $successStatus = 200;
                             ->whereDate('start_time', '<', $current_time);
         }else if($type =='upcoming'){
             $tripdetail = $tripdetail->where('passenger_id', '=', $user_id)
-                            ->whereDate('start_time', '>=', $current_time);
+                            ->where(function ($q)use ($current_time){
+                               $q->whereDate('start_time', '>=', $current_time)
+                               ->orWhereNull('start_time');
+                            });
         }else{
           $tripdetail = $tripdetail->where('passenger_id', '=', $user_id);  
         }
@@ -144,7 +147,7 @@ public $successStatus = 200;
             $trip['status'] =$value->status;
             $trip['is_confirmed'] =$value->is_confirmed;
             $trip['driver_id'] =$value->driver_id;
-            $trip['driver_name'] =$value['drivers']->name;
+            $trip['driver_name'] =$value['drivers'] ? $value['drivers']->name :'';
             if($vehicle){
                 $trip['vehicle_name'] =$vehicle->model;
                 $trip['vehicle_id'] =$vehicle->id;
@@ -228,27 +231,62 @@ public $successStatus = 200;
         return response()->json(['data' => $driver], $this-> successStatus); 
     }
 
-    // driver filter nearby rider 
-    public function nearbyDriver(Request $request){
-        $latitude= $request->latitude;
-        $longitude=$request->longitude;
-        //echo"<pre>";print_r($request->all());die;
+    public function nearbydrivers($latitude,$longitude){
         // $search_drivers= Driver::selectRaw('*, ( 3959 * acos( cos( radians('.$latitude.') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians('.$longitude.') ) + sin( radians('.$latitude.') ) * sin( radians( latitude ) ) ) ) AS distance')
         //      ->having('distance', '<',5)
         //      ->orderBy('distance');
 
-
-       $search_drivers= DB::table("drivers")
+       $return =  DB::table("drivers")
         ->select("*"
             ,DB::raw("6371 * acos(cos(radians(" . $latitude . ")) 
             * cos(radians(drivers.latitude)) 
             * cos(radians(drivers.longitude) - radians(" . $longitude . ")) 
             + sin(radians(" .$latitude. ")) 
             * sin(radians(drivers.latitude))) AS distance"))
-            ->having('distance', '<',5)
+            ->having('distance', '<',10)
             ->get();
+        return $return;
+    }
 
-        return response()->json(['data' => $search_drivers], $this-> successStatus);
+    // driver filter nearby rider 
+    public function nearbyDriver(Request $request){
+        $latitude= $request->latitude;
+        $longitude=$request->longitude;       
+        $search_drivers=$this->nearbydrivers($latitude,$longitude);
+        $icon =url('/').\Storage::url('app/public/media/cab.png');
+        return response()->json(['data' => $search_drivers,'icon'=>$icon], $this-> successStatus);
+    }
+
+    // book trip
+    public function tripBook(Request $request){
+        $apiurl =url('/').'/api/';
+        //$client = new \Guzzle\Service\Client($apiurl);
+        $trip = new Trip();
+        $trip->to = $request->to;
+        $trip->to_lat = $request->to_lat;
+        $trip->to_long = $request->to_long;
+        $trip->to_lat_long = $request->to_lat_long;
+        $trip->from_ = $request->from;
+        $trip->from_lat = $request->from_lat;
+        $trip->from_long = $request->from_long;
+        $trip->from_lat_long = $request->from_lat_long;
+        $trip->passenger_id = $request->passenger_id;
+        $tripadd = $trip->save();
+       // $message ="";
+        if($tripadd){
+            // $response = $client->get("tripbook/10")->send();
+            // return $response;
+            //$message ="Cab successfully booked";
+          //  return redirect('/api/confirm-driver/'.$trip->id);
+        }else{
+            $message="server error";
+            return response()->json(['data' => $message], $this-> successStatus);
+        }  
+    }
+
+    // confirm driver
+    public function confirmDriver(Request $request,$id){
+        return response()->json(['data' => $id], $this-> successStatus);  
     }
 
 }

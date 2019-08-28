@@ -24,4 +24,6 @@ Route::post('trips-list', 'API\UserController@alltrips');
 Route::post('trips-detail', 'API\UserController@tripdetail');
 Route::post('driver-detail', 'API\UserController@driverdetail');
 Route::post('home', 'API\UserController@nearbyDriver');
+Route::post('tripbook', 'API\UserController@tripBook');
+Route::get('tripbook/{trip_id}', 'API\UserController@confirmDriver');
 });

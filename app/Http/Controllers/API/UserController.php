@@ -261,6 +261,10 @@ public $successStatus = 200;
     public function tripBook(Request $request){
         $apiurl =url('/').'/api/';
         //$client = new \Guzzle\Service\Client($apiurl);
+        // $response = $client->get("tripbook/10")->send();
+        // return $response;
+        $latitude = $request->to_lat;
+        $longitude = $request->to_long;
         $trip = new Trip();
         $trip->to = $request->to;
         $trip->to_lat = $request->to_lat;
@@ -274,10 +278,9 @@ public $successStatus = 200;
         $tripadd = $trip->save();
        // $message ="";
         if($tripadd){
-            // $response = $client->get("tripbook/10")->send();
-            // return $response;
             //$message ="Cab successfully booked";
-          //  return redirect('/api/confirm-driver/'.$trip->id);
+           $assigndriver = $this->nearbydrivers($latitude,$longitude);
+
         }else{
             $message="server error";
             return response()->json(['data' => $message], $this-> successStatus);

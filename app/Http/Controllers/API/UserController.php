@@ -41,6 +41,26 @@ public $successStatus = 200;
 
         } 
     }
+    // logout 
+    public function logoutApi(){ 
+        if (Auth::check()) {
+           Auth::user()->AauthAcessToken()->delete();
+        }
+    }
+
+    // This function will return a random 
+    // string of specified length 
+    function random_strings($length_of_string) 
+    { 
+      
+        // String of all alphanumeric character 
+        $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; 
+      
+        // Shufle the $str_result and returns substring 
+        // of specified length 
+        return substr(str_shuffle($str_result),  
+                           0, $length_of_string); 
+    } 
     /** 
      * Register api 
      * 
@@ -58,8 +78,12 @@ public $successStatus = 200;
             return response()->json(['error'=>$validator->errors()], 401);            
         }
         $input = $request->all(); 
-        $input['password'] = bcrypt($input['password']); 
+        $input['password'] = bcrypt($input['password']);  
+        $user_Code = $this->random_strings(5);
+        $input['user_Code'] = bcrypt($user_Code);
         $user = User::create($input); 
+        $updateuser = array('user_Code' => $user_Code.$user->id);
+        $user->update($updateuser); 
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
         $success['name'] =  $user->name;
         $success['id'] =  $user->id;
@@ -290,6 +314,12 @@ public $successStatus = 200;
     // confirm driver
     public function confirmDriver(Request $request,$id){
         return response()->json(['data' => $id], $this-> successStatus);  
+    }
+    // confirm driver
+    public function freeride(Request $request,$id){
+        $user = Auth::user(); 
+        $data = array('user_code' =>$user->user_Code);
+        return response()->json(['data' => $data], $this-> successStatus);  
     }
 
 }

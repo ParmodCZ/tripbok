@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email','role', 'password','address','city','country','zip','phone','gender'
+        'name', 'email','role', 'password','address','city','country','zip','phone','user_Code','gender'
     ];
 
     /**
@@ -38,6 +38,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    //logout api
+    public function AauthAcessToken(){
+        return $this->hasMany('\App\OauthAccessToken');
+    }
     /**
     * relation betwwen users and trips
     **/

@@ -70,12 +70,12 @@ public $successStatus = 200;
         $validator = Validator::make($request->all(), [ 
             'name' => 'required', 
             'email' => 'required|email|unique:users,email', 
-            'phone' => 'required|unique:users,phone',
+            'phone' => 'numeric|min:10|required|unique:users,phone',
             'password' => 'required', 
             'c_password' => 'required|same:password', 
         ]);
         if ($validator->fails()) { 
-            return response()->json(['error'=>$validator->errors()], 401);            
+           return response()->json(['validator_error'=>$validator->errors()], 401);       
         }
         $input = $request->all(); 
         $input['password'] = bcrypt($input['password']);  

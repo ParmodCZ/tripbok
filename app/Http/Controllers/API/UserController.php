@@ -44,7 +44,10 @@ public $successStatus = 200;
     // logout 
     public function logoutApi(){ 
         if (Auth::check()) {
-           Auth::user()->AauthAcessToken()->delete();
+          $logout = Auth::user()->AauthAcessToken()->delete();
+          if($logout){
+            return response()->json(['authenticated'=>'false']); 
+          }
         }
     }
 

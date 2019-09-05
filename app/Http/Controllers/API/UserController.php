@@ -8,7 +8,7 @@ use App\Vehicle;
 use App\Media;
 use App\DriverRating;
 use App\Driver;
-use Illuminate\Support\Facades\Auth; 
+//use Auth; 
 use Illuminate\Validation\Rule;
 use Validator;
 use Carbon\Carbon;
@@ -16,7 +16,7 @@ use DB;
 class UserController extends Controller 
 {
 public $successStatus = 200;
-/** 
+    /** 
      * login api 
      * 
      * @return \Illuminate\Http\Response 
@@ -29,24 +29,52 @@ public $successStatus = 200;
         if ($validator->fails()) { 
             return response()->json(['validator_error'=>$validator->errors()], 401);            
         }else{
-            if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
-                $user = Auth::user(); 
+            if(auth()->attempt(['email' => request('email'), 'password' => request('password')])){ 
+                $user = auth()->user(); 
                 $success['token'] =  $user->createToken('MyApp')-> accessToken; 
                 $success['id'] =  $user->id; 
                 return response()->json(['authenticated'=> true,'data' => $success], $this-> successStatus); 
             } 
             else{ 
-                return response()->json(['authenticated'=>false], 401); 
+                return response()->json(['authenticated'=>false,'message'=>'your has been wrong email or password '], 401);
             }
 
         } 
+    }
+
+    /** 
+     * user profile update api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function profile(Request $request){
+        $user = auth()->user();
+         return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
+        // $validator = Validator::make($request->all(), [ 
+        //     'email' => 'required|email', 
+        //     'password' => 'required', 
+        // ]);
+        // if ($validator->fails()) { 
+        //     return response()->json(['validator_error'=>$validator->errors()], 401);            
+        // }else{
+        //     if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
+        //         $user = Auth::user(); 
+        //         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
+        //         $success['id'] =  $user->id; 
+        //         return response()->json(['authenticated'=> true,'data' => $success], $this-> successStatus); 
+        //     } 
+        //     else{ 
+        //         return response()->json(['authenticated'=>false,'message'=>'your has been wrong email or password '], 401);
+        //     }
+
+        // } 
     }
     // logout 
     public function logoutApi(){ 
         if (Auth::check()) {
           $logout = Auth::user()->AauthAcessToken()->delete();
           if($logout){
-            return response()->json(['authenticated'=>'false']); 
+            return response()->json(['authenticated'=>false,'message'=>'Logout successfully']); 
           }
         }
     }

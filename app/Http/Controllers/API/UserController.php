@@ -29,8 +29,8 @@ public $successStatus = 200;
         if ($validator->fails()) { 
             return response()->json(['validator_error'=>$validator->errors()], 401);            
         }else{
-            if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
-                $user = Auth::user(); 
+            if(auth()->attempt(['email' => request('email'), 'password' => request('password')])){ 
+                $user = auth()->user(); 
                 $success['token'] =  $user->createToken('MyApp')-> accessToken; 
                 $success['id'] =  $user->id; 
                 return response()->json(['authenticated'=> true,'data' => $success], $this-> successStatus); 
@@ -43,13 +43,13 @@ public $successStatus = 200;
     }
 
     /** 
-     * user profile update api 
+     * user get user profile api 
      * 
      * @return \Illuminate\Http\Response 
      */ 
     public function profile(Request $request){
-        $user = Auth::user();
-         return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
+        $user = auth()->user();
+        return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
         // $validator = Validator::make($request->all(), [ 
         //     'email' => 'required|email', 
         //     'password' => 'required', 
@@ -69,6 +69,20 @@ public $successStatus = 200;
 
         // } 
     }
+
+    /** 
+     * update user profile api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function updateprofile(Request $request){
+        // $auth = auth()->user();
+        // $user = User::where('id','=' $auth->id)->first();
+
+
+        return response()->json(['authenticated'=> true,'data' =>$request], $this-> successStatus); 
+    }
+
     // logout 
     public function logoutApi(){ 
         if (Auth::check()) {

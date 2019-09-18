@@ -21,7 +21,8 @@ Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
 
 Route::group(['middleware' => 'auth:api'], function(){
-	Route::post('profile', 'API\UserController@profile');
+	Route::get('profile', 'API\UserController@profile');
+	Route::post('update/profile', 'API\UserController@updateprofile');
 	Route::post('logout', 'API\UserController@logoutApi');
 	Route::post('trips-list', 'API\UserController@alltrips');
 	Route::post('trips-detail', 'API\UserController@tripdetail');

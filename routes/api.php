@@ -19,14 +19,16 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
-Route::post('logout', 'API\UserController@logoutApi');
+
 Route::group(['middleware' => 'auth:api'], function(){
-Route::post('trips-list', 'API\UserController@alltrips');
-Route::post('trips-detail', 'API\UserController@tripdetail');
-Route::post('driver-detail', 'API\UserController@driverdetail');
-Route::post('home', 'API\UserController@nearbyDriver');
-Route::post('tripbook', 'API\UserController@tripBook');
-Route::get('tripbook/{trip_id}', 'API\UserController@confirmDriver');
-Route::post('payment', 'PaymentController@testPayment');
-Route::post('payment/response', 'PaymentController@paymentResponse');
+	Route::post('profile', 'API\UserController@profile');
+	Route::post('logout', 'API\UserController@logoutApi');
+	Route::post('trips-list', 'API\UserController@alltrips');
+	Route::post('trips-detail', 'API\UserController@tripdetail');
+	Route::post('driver-detail', 'API\UserController@driverdetail');
+	Route::post('home', 'API\UserController@nearbyDriver');
+	Route::post('tripbook', 'API\UserController@tripBook');
+	Route::get('tripbook/{trip_id}', 'API\UserController@confirmDriver');
+	Route::post('payment', 'PaymentController@testPayment');
+	Route::post('payment/response', 'PaymentController@paymentResponse');
 });

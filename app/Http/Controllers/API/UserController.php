@@ -43,7 +43,7 @@ public $successStatus = 200;
     }
 
     /** 
-     * user profile update api 
+     * user get user profile api 
      * 
      * @return \Illuminate\Http\Response 
      */ 
@@ -69,6 +69,20 @@ public $successStatus = 200;
 
         // } 
     }
+
+    /** 
+     * update user profile api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function updateprofile(Request $request){
+        // $auth = auth()->user();
+        // $user = User::where('id','=' $auth->id)->first();
+
+
+         return response()->json(['authenticated'=> true,'data' =>$request], $this-> successStatus); 
+    }
+
     // logout 
     public function logoutApi(){ 
         if (Auth::check()) {

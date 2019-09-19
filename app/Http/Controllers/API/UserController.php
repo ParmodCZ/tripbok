@@ -8,7 +8,7 @@ use App\Vehicle;
 use App\Media;
 use App\DriverRating;
 use App\Driver;
-//use Auth; 
+use Auth; 
 use Illuminate\Validation\Rule;
 use Validator;
 use Carbon\Carbon;
@@ -76,11 +76,37 @@ public $successStatus = 200;
      * @return \Illuminate\Http\Response 
      */ 
     public function updateprofile(Request $request){
-        // $auth = auth()->user();
-        // $user = User::where('id','=' $auth->id)->first();
-
-
-         return response()->json(['authenticated'=> true,'data' =>$request], $this-> successStatus); 
+        $auth = auth()->user();
+        $user = User::where('id','=', $auth->id)->first();
+        $user= $user->update((array)$request->form);
+        if($user){
+           return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
+       }else{
+            return response()->json(['authenticated'=> false,'message'=>'Something wrong']); 
+       }
+         
+    }
+    /** 
+     * update user password api 
+     * 
+     * @return \Illuminate\Http\Response 
+     */ 
+    public function updatepassword(Request $request){
+       // return response()->json(['authenticated'=> false,'message'=>$request->all()]);
+        $auth  = auth()->user();
+        $user  = User::where('id','=', $auth->id)->first();
+        $check =Auth::guard('web')->attempt(['email' =>$user->email, 'password' => request('oldpassword')]);
+        if($check){
+            $user= $user->update((array)$request->form);
+            if($user){
+                return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
+            }else{
+                return response()->json(['authenticated'=> false,'message'=>'Something wrong1']); 
+            }
+        }else{
+                return response()->json(['authenticated'=> false,'message'=>'Something wrong']); 
+        }
+         
     }
 
     // logout 

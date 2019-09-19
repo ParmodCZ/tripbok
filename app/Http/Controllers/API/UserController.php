@@ -49,25 +49,12 @@ public $successStatus = 200;
      */ 
     public function profile(Request $request){
         $user = auth()->user();
-        return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
-        // $validator = Validator::make($request->all(), [ 
-        //     'email' => 'required|email', 
-        //     'password' => 'required', 
-        // ]);
-        // if ($validator->fails()) { 
-        //     return response()->json(['validator_error'=>$validator->errors()], 401);            
-        // }else{
-        //     if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
-        //         $user = Auth::user(); 
-        //         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-        //         $success['id'] =  $user->id; 
-        //         return response()->json(['authenticated'=> true,'data' => $success], $this-> successStatus); 
-        //     } 
-        //     else{ 
-        //         return response()->json(['authenticated'=>false,'message'=>'your has been wrong email or password '], 401);
-        //     }
-
-        // } 
+        if($user){
+            return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus);   
+        }else{
+            return response()->json(['authenticated'=> false,'message'=>'Your are not authenticated']);
+        }
+        
     }
 
     /** 

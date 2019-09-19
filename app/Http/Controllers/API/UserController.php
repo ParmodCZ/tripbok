@@ -88,7 +88,7 @@ public $successStatus = 200;
         $user  = User::where('id','=', $auth->id)->first();
         $check =Auth::guard('web')->attempt(['email' =>$user->email, 'password' => request('oldpassword')]);
         if($check){
-            $user= $user->update((array)$request->form);
+            $user= $user->update((array)$request->all());
             if($user){
                 return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
             }else{

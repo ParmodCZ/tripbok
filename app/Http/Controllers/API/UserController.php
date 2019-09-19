@@ -79,7 +79,7 @@ public $successStatus = 200;
         $auth = auth()->user();
         $user = User::where('id','=', $auth->id)->first();
         if($user){
-            if($user->update((array)$request->form)){
+            if($user->update((array)$request->all())){
                 return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
             }else{
                 return response()->json(['authenticated'=> true,'message'=>'Something wrong']); 

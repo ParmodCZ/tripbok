@@ -78,12 +78,16 @@ public $successStatus = 200;
     public function updateprofile(Request $request){
         $auth = auth()->user();
         $user = User::where('id','=', $auth->id)->first();
-        $user= $user->update((array)$request->form);
         if($user){
-           return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
-       }else{
-            return response()->json(['authenticated'=> false,'message'=>'Something wrong']); 
-       }
+            if($user->update((array)$request->form)){
+                return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
+            }else{
+                return response()->json(['authenticated'=> true,'message'=>'Something wrong']); 
+            }
+           
+        }else{
+            return response()->json(['authenticated'=> false,'message'=>'Your are not authenticated']); 
+        }
          
     }
     /** 
@@ -101,10 +105,10 @@ public $successStatus = 200;
             if($user){
                 return response()->json(['authenticated'=> true,'message'=>'Successfully update'], $this-> successStatus); 
             }else{
-                return response()->json(['authenticated'=> false,'message'=>'Something wrong1']); 
+                return response()->json(['authenticated'=> true,'message'=>'Something wrong']); 
             }
         }else{
-                return response()->json(['authenticated'=> false,'message'=>'Something wrong']); 
+            return response()->json(['authenticated'=> false,'message'=>'wrong current password']); 
         }
          
     }

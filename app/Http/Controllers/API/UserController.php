@@ -49,7 +49,7 @@ public $successStatus = 200;
      */ 
     public function profile(Request $request){
         $user = auth()->user();
-         return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
+        return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus); 
         // $validator = Validator::make($request->all(), [ 
         //     'email' => 'required|email', 
         //     'password' => 'required', 

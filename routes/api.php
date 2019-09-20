@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
-
+Route::post('upload', 'API\UserController@uploadfile');
 Route::group(['middleware' => 'auth:api'], function(){
 	Route::get('profile', 'API\UserController@profile');
 	Route::post('update/profile', 'API\UserController@updateprofile');

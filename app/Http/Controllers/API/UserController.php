@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\API;
 use Illuminate\Http\Request; 
+use App\Http\Requests;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\Controller; 
 use App\User; 
 use App\Trip;
@@ -383,5 +385,48 @@ public $successStatus = 200;
         $data = array('user_code' =>$user->user_Code);
         return response()->json(['data' => $data], $this-> successStatus);  
     }
+
+
+    public function uploadfile(Request $request){
+
+        // $user = Auth::user(); 
+        // $data = array('user_code' =>$user->user_Code);
+        // return response()->json(['data' => $data], $this-> successStatus);
+        if(!$request->hasFile('fileName')) {
+        return response()->json(['upload_file_not_found'], 400);
+        }
+
+        $allowedfileExtension=['pdf','jpg','png'];
+        $file = $request->file('fileName'); 
+        $errors = [];
+        
+       // foreach ($files as $file) {      
+
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension,$allowedfileExtension);
+              $mediaFiles = $request->fileName;
+            if($check) {
+
+                //foreach($request->fileName as $mediaFiles) {
+                    
+                    $media_ext = $mediaFiles->getClientOriginalName();
+                    $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
+                    $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
+                   // print_r($mFiles);die('dj');
+                    $mediaFiles->move(public_path().'/images/', $mFiles);
+                    // $media = new Media();
+                    // $media->filename = $mFiles;
+                    // $media->module_id = $request->clientId;
+                    // $media->module = Auth::user()->id;
+                    // $media->save();
+                    return response()->json(['file_uploaded'], 200);
+               // }
+            } else {
+                return response()->json(['invalid_file_format'], 422);
+            }
+        //}  
+    }
+
 
 }

@@ -388,16 +388,12 @@ public $successStatus = 200;
 
 
     public function uploadfile(Request $request){
-
-        // $user = Auth::user(); 
-        // $data = array('user_code' =>$user->user_Code);
-        // return response()->json(['data' => $data], $this-> successStatus);
-         //return response()->json(['file_uploaded'=>$request->all()]);
+    	$auth  = auth()->user();
         if(!$request->hasFile('file')) {
         return response()->json(['upload_file_not_found'], 400);
         }
 
-        $allowedfileExtension=['pdf','jpg','png'];
+        $allowedfileExtension=['jpeg','jpg','png'];
         $file = $request->file('file'); 
         $errors = [];
         
@@ -407,22 +403,21 @@ public $successStatus = 200;
 
             $check = in_array($extension,$allowedfileExtension);
               $mediaFiles = $request->file;
-            if($check) {
-
-                //foreach($request->fileName as $mediaFiles) {
-                    
+            if($check) {            
                     $media_ext = $mediaFiles->getClientOriginalName();
                     $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
                     $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
-                   // print_r($mFiles);die('dj');
-                    $mediaFiles->move(public_path("images/"), $mFiles);
-                    // $media = new Media();
-                    // $media->filename = $mFiles;
-                    // $media->module_id = $request->clientId;
-                    // $media->module = Auth::user()->id;
-                    // $media->save();
+                    $path =	'images/avatar/'.$auth->id;
+                    //echo $path;die();
+                    $mediaFiles->move(public_path($path), $mFiles);
+                    $media = new Media();
+                    $media->filename = $mFiles;
+                    $media->file_path= $path.$mFiles;
+                    $media->module_id= $auth->id;
+                    $media->module   = 'user';
+                    $media->submodule   = 'avatar';
+                    $media->save();
                     return response()->json(['file_uploaded'], 200);
-               // }
             } else {
                 return response()->json(['invalid_file_format'], 422);
             }

@@ -392,7 +392,7 @@ public $successStatus = 200;
         // $user = Auth::user(); 
         // $data = array('user_code' =>$user->user_Code);
         // return response()->json(['data' => $data], $this-> successStatus);
-         return response()->json(['file_uploaded'=>$_FILES]);
+         return response()->json(['file_uploaded'=>$request->all()]);
         if(!$request->hasFile('fileName')) {
         return response()->json(['upload_file_not_found'], 400);
         }

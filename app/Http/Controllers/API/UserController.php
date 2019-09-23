@@ -415,7 +415,7 @@ public $successStatus = 200;
                     $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
                     $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
                    // print_r($mFiles);die('dj');
-                    $mediaFiles->move(public_path().'/images/', $mFiles);
+                    $mediaFiles->move(public_path("images/"), $mFiles);
                     // $media = new Media();
                     // $media->filename = $mFiles;
                     // $media->module_id = $request->clientId;

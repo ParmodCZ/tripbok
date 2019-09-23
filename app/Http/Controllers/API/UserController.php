@@ -101,6 +101,36 @@ public $successStatus = 200;
         }
          
     }
+    // update profile pic
+    public function uploadfile(Request $request){
+    	$auth  = Auth::user();
+        if(!$request->hasFile('file')) {
+        return response()->json(['upload_file_not_found'], 400);
+        }
+        $allowedfileExtension=['jpeg','jpg','png'];
+        $file = $request->file('file'); 
+        $errors = [];
+        $extension = $file->getClientOriginalExtension();
+        $check = in_array($extension,$allowedfileExtension);
+        $mediaFiles = $request->file;
+        if($check) {                   
+            $media_ext = $mediaFiles->getClientOriginalName();
+            $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
+            $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
+            $path =	'images/avatar/'.$auth->id;
+            $mediaFiles->move(public_path($path), $mFiles);
+            $media = new Media();
+            $media->filename = $mFiles;
+            $media->file_path= $path.$mFiles;
+            $media->module_id= $auth->id;
+            $media->module   = 'user';
+            $media->submodule   = 'avatar';
+            $media->save();
+            return response()->json(['file_uploaded'], 200);
+        } else {
+            return response()->json(['invalid_file_format'], 422);
+        }  
+    }
 
     // logout 
     public function logoutApi(){ 
@@ -385,44 +415,5 @@ public $successStatus = 200;
         $data = array('user_code' =>$user->user_Code);
         return response()->json(['data' => $data], $this-> successStatus);  
     }
-
-
-    public function uploadfile(Request $request){
-    	$auth  = auth()->user();
-        if(!$request->hasFile('file')) {
-        return response()->json(['upload_file_not_found'], 400);
-        }
-
-        $allowedfileExtension=['jpeg','jpg','png'];
-        $file = $request->file('file'); 
-        $errors = [];
-        
-       // foreach ($files as $file) {      
-
-            $extension = $file->getClientOriginalExtension();
-
-            $check = in_array($extension,$allowedfileExtension);
-              $mediaFiles = $request->file;
-            if($check) {            
-                    $media_ext = $mediaFiles->getClientOriginalName();
-                    $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
-                    $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
-                    $path =	'images/avatar/'.$auth->id;
-                    //echo $path;die();
-                    $mediaFiles->move(public_path($path), $mFiles);
-                    $media = new Media();
-                    $media->filename = $mFiles;
-                    $media->file_path= $path.$mFiles;
-                    $media->module_id= $auth->id;
-                    $media->module   = 'user';
-                    $media->submodule   = 'avatar';
-                    $media->save();
-                    return response()->json(['file_uploaded'], 200);
-            } else {
-                return response()->json(['invalid_file_format'], 422);
-            }
-        //}  
-    }
-
 
 }

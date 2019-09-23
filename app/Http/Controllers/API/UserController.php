@@ -109,19 +109,21 @@ public $successStatus = 200;
         }
         $allowedfileExtension=['jpeg','jpg','png'];
         $file = $request->file('file'); 
-        $errors = [];
         $extension = $file->getClientOriginalExtension();
         $check = in_array($extension,$allowedfileExtension);
         $mediaFiles = $request->file;
-        if($check) {                   
-            $media_ext = $mediaFiles->getClientOriginalName();
-            $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
-            $mFiles = $media_no_ext . '-' . uniqid() . '.' . $extension;
-            $path =	'images/avatar/'.$auth->id;
-            $mediaFiles->move(public_path($path), $mFiles);
+        if($check) {   
+            $avatarName ='_avatar'.time().'.'.$extension;
+            $path ='public/avatars/'.$auth->id;
+            $mediaFiles->storeAs($path,$avatarName);                
+            // $media_ext = $mediaFiles->getClientOriginalName();
+            // $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
+            // $avatarName = $media_no_ext . '-' . uniqid() . '.' . $extension;
+            // $path =	'images/avatar/'.$auth->id;
+            // $mediaFiles->move(public_path($path), $avatarName);
             $media = new Media();
-            $media->filename = $mFiles;
-            $media->file_path= $path.$mFiles;
+            $media->filename = $avatarName;
+            $media->file_path= $path.$avatarName;
             $media->module_id= $auth->id;
             $media->module   = 'user';
             $media->submodule   = 'avatar';

@@ -392,13 +392,13 @@ public $successStatus = 200;
         // $user = Auth::user(); 
         // $data = array('user_code' =>$user->user_Code);
         // return response()->json(['data' => $data], $this-> successStatus);
-         return response()->json(['file_uploaded'=>$request->all()]);
-        if(!$request->hasFile('fileName')) {
+         //return response()->json(['file_uploaded'=>$request->all()]);
+        if(!$request->hasFile('file')) {
         return response()->json(['upload_file_not_found'], 400);
         }
 
         $allowedfileExtension=['pdf','jpg','png'];
-        $file = $request->file('fileName'); 
+        $file = $request->file('file'); 
         $errors = [];
         
        // foreach ($files as $file) {      
@@ -406,7 +406,7 @@ public $successStatus = 200;
             $extension = $file->getClientOriginalExtension();
 
             $check = in_array($extension,$allowedfileExtension);
-              $mediaFiles = $request->fileName;
+              $mediaFiles = $request->file;
             if($check) {
 
                 //foreach($request->fileName as $mediaFiles) {

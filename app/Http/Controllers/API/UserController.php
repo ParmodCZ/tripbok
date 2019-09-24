@@ -119,14 +119,16 @@ public $successStatus = 200;
             // $avatarName = $media_no_ext . '-' . uniqid() . '.' . $extension;
             // $path =	'images/avatar/'.$auth->id;
             $mediaFiles->move(public_path($path), $avatarName);
+            $actulpath =$path.$avatarName;
+            $url = asset($actulpath);
             $media = new Media();
             $media->filename = $avatarName;
-            $media->file_path= $path.$avatarName;
+            $media->file_path= $actulpath;
             $media->module_id= $auth->id;
             $media->module   = 'user';
             $media->submodule   = 'avatar';
             $media->save();
-            return response()->json(['success'=>true,'userImg'=>''], 200);
+            return response()->json(['success'=>true,'userImg'=>$url], 200);
         } else {
            return response()->json(['success'=>false], 422);
         }  

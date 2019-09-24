@@ -36,8 +36,7 @@ public $successStatus = 200;
                 $success['token'] =  $user->createToken('MyApp')-> accessToken; 
                 $success['id'] =  $user->id; 
                 return response()->json(['authenticated'=> true,'data' => $success], $this-> successStatus); 
-            } 
-            else{ 
+            }else{ 
                 return response()->json(['authenticated'=>false,'message'=>'your has been wrong email or password '], 401);
             }
 
@@ -73,7 +72,6 @@ public $successStatus = 200;
             }else{
                 return response()->json(['authenticated'=> true,'message'=>'Something wrong']); 
             }
-           
         }else{
             return response()->json(['authenticated'=> false,'message'=>'Your are not authenticated']); 
         }
@@ -114,13 +112,13 @@ public $successStatus = 200;
         $mediaFiles = $request->file;
         if($check) {   
             $avatarName ='_avatar'.time().'.'.$extension;
-            $path ='public/avatars/'.$auth->id;
-            $mediaFiles->storeAs($path,$avatarName);                
+            $path ='images/avatars/'.$auth->id;
+            //$mediaFiles->storeAs($path,$avatarName);                
             // $media_ext = $mediaFiles->getClientOriginalName();
             // $media_no_ext = pathinfo($media_ext, PATHINFO_FILENAME);
             // $avatarName = $media_no_ext . '-' . uniqid() . '.' . $extension;
             // $path =	'images/avatar/'.$auth->id;
-            // $mediaFiles->move(public_path($path), $avatarName);
+            $mediaFiles->move(public_path($path), $avatarName);
             $media = new Media();
             $media->filename = $avatarName;
             $media->file_path= $path.$avatarName;
@@ -128,9 +126,9 @@ public $successStatus = 200;
             $media->module   = 'user';
             $media->submodule   = 'avatar';
             $media->save();
-            return response()->json(['file_uploaded'], 200);
+            return response()->json(['success'=>true,'userImg'=>''], 200);
         } else {
-            return response()->json(['invalid_file_format'], 422);
+           return response()->json(['success'=>false], 422);
         }  
     }
 

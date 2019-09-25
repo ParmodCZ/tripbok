@@ -51,6 +51,11 @@ public $successStatus = 200;
     public function profile(Request $request){
         $user = auth()->user();
         if($user){
+            $avater = Media::Where('module_id','=',$user->id)
+                ->Where('module','=','user')
+                ->Where('submodule','=','avatar')
+                ->first();
+            $user->avatar = asset($avater->file_path);
             return response()->json(['authenticated'=> true,'data' => $user], $this-> successStatus);   
         }else{
             return response()->json(['authenticated'=> false,'message'=>'Your are not authenticated']);

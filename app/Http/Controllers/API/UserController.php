@@ -181,8 +181,8 @@ public $successStatus = 200;
         $updateuser = array('user_Code' => $user_Code.$user->id);
         $user->update($updateuser); 
         $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-        $success['name'] =  $user->name;
-        $success['id'] =  $user->id;
+        $success['name']  =  $user->name;
+        $success['id']    =  $user->id;
         return response()->json(['authenticated'=>true,'data'=>$success], $this-> successStatus); 
     }
 
@@ -212,7 +212,7 @@ public $successStatus = 200;
         $string ='';
         if ($value) {
             $stgary = explode(',', $value);
-             $string = $stgary[0];
+            $string = $stgary[0];
         }
         return $string;
     }
@@ -337,7 +337,7 @@ public $successStatus = 200;
                     ->where('submodule', '=', 'profile')
                     ->first();
         if($pro_pic){
-           $driver->driver->profile =url('/').'/'.$pro_pic->file_path; 
+           $driver->driver->profile =asset('public/storage'.$pro_pic->file_path); 
         }
 
         $created = new Carbon($driver->created_at);
@@ -373,7 +373,7 @@ public $successStatus = 200;
         $latitude= $request->latitude;
         $longitude=$request->longitude;       
         $search_drivers=$this->nearbydrivers($latitude,$longitude);
-        $icon =url('/').\Storage::url('app/public/media/cab.png');
+        $icon =asset('public/storage/media/cab.png');
         return response()->json(['data' => $search_drivers,'icon'=>$icon], $this-> successStatus);
     }
 
